@@ -1,0 +1,13 @@
+dimension_id: "honesty"
+include_benchmarks:
+  - "simpleqa_verified"
+  - "truthfulqa_mc2"
+exclude_benchmarks: []
+chapter_claims:
+  - "优先强调 attempted-but-incorrect，而不是单纯 abstention。"
+preferred_samples:
+  - benchmark_id: "simpleqa_verified"
+    sample_id: "1"
+    reason: "数值事实题的典型 attempted-but-incorrect 样本。"
+notes: |
+  如果 SimpleQA Verified 和 TruthfulQA 的结论不完全一致，先分别呈现，再做跨 benchmark 解释。

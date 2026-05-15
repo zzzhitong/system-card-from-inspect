@@ -1,0 +1,18 @@
+{
+  "runtime": {
+    "python_candidates": [
+      "inspect_evals/.venv/Scripts/python.exe",
+      "inspect_evals/.venv/bin/python",
+      ".venv/Scripts/python.exe",
+      ".venv/bin/python",
+      "python",
+      "python3"
+    ],
+    "working_directory": ".",
+    "env_files": [
+      ".env",
+      "inspect_evals/.env"
+    ],
+    "env": {}
+  }
+}

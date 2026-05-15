@@ -1,0 +1,77 @@
+{% set zh = language.startswith("zh") %}
+# {{ report.title }}
+
+{% if report.model_name %}
+{% if zh -%}
+**模型:** {{ report.model_name }}  
+{% else -%}
+**Model:** {{ report.model_name }}  
+{% endif %}
+{% endif %}
+{% if report.model_id %}
+{% if zh -%}
+**模型 ID:** `{{ report.model_id }}`  
+{% else -%}
+**Model ID:** `{{ report.model_id }}`  
+{% endif %}
+{% endif %}
+{% if report.organization %}
+{% if zh -%}
+**组织:** {{ report.organization }}  
+{% else -%}
+**Organization:** {{ report.organization }}  
+{% endif %}
+{% endif %}
+
+{% if report.notes %}
+{{ report.notes }}
+{% endif %}
+
+{% if key_findings %}
+## Key findings
+{% for finding in key_findings %}
+- {{ finding }}
+{% endfor %}
+{% endif %}
+
+{% if coverage_and_caveats %}
+## Coverage and caveats
+{% for caveat in coverage_and_caveats %}
+- {{ caveat }}
+{% endfor %}
+{% endif %}
+
+{% if overall_risk_profile %}
+## Overall risk profile
+- Highest-risk benchmark: {{ overall_risk_profile.highest_risk_benchmark or "n/a" }}
+- Highest aggregate mean: {{ overall_risk_profile.highest_risk_mean_formatted }}
+- Dimension count: {{ overall_risk_profile.dimension_count }}
+{% endif %}
+
+{% if recommended_mitigations %}
+## Recommended mitigations
+{% for item in recommended_mitigations %}
+- {{ item }}
+{% endfor %}
+{% endif %}
+
+## Evaluation summary
+
+| Benchmark | Dimension | Primary metrics |
+|---|---|---|
+{% for benchmark in benchmark_rows %}
+| {{ benchmark.display_name }} | {{ benchmark.dimension_title }} | {{ benchmark.primary_metric_summary }} |
+{% endfor %}
+
+{% if warnings %}
+## Warnings
+{% for warning in warnings %}
+- {{ warning }}
+{% endfor %}
+{% endif %}
+
+{% for dimension in dimensions %}
+---
+
+{{ dimension.rendered_markdown }}
+{% endfor %}

@@ -1,0 +1,99 @@
+{% set zh = language.startswith("zh") %}
+# {{ dimension.title }}
+
+{{ dimension.description or ("该维度汇总多个 benchmark 的关键信号。" if zh else "This dimension summarizes the key observations across several benchmarks.") }}
+
+{% if dimension.chapter_claims %}
+{% if zh -%}
+## 写作重点
+{% else -%}
+## Editorial emphasis
+{% endif %}
+{% for claim in dimension.chapter_claims %}
+- {{ claim }}
+{% endfor %}
+{% endif %}
+
+{% if zh -%}
+## Included Benchmarks
+{% else -%}
+## Included benchmarks
+{% endif %}
+
+| Benchmark | Primary metrics |
+|---|---|
+{% for benchmark in dimension.benchmarks %}
+| {{ benchmark.display_name }} | {{ benchmark.primary_metric_summary }} |
+{% endfor %}
+
+{% if dimension.key_findings %}
+## Key findings
+{% for finding in dimension.key_findings %}
+- {{ finding }}
+{% endfor %}
+{% endif %}
+
+## Cross-benchmark observations
+{% for note in dimension.observations %}
+- {{ note }}
+{% endfor %}
+
+{% if dimension.cross_benchmark_consensus %}
+## Cross-benchmark consensus
+{% for note in dimension.cross_benchmark_consensus %}
+- {{ note }}
+{% endfor %}
+{% endif %}
+
+{% if dimension.cross_benchmark_tensions %}
+## Cross-benchmark tensions
+{% for note in dimension.cross_benchmark_tensions %}
+- {{ note }}
+{% endfor %}
+{% endif %}
+
+{% if dimension.risk_interpretation %}
+## Risk interpretation
+{% for note in dimension.risk_interpretation %}
+- {{ note }}
+{% endfor %}
+{% endif %}
+
+{% if dimension.implications %}
+## Implications / mitigations
+{% for implication in dimension.implications %}
+- {{ implication }}
+{% endfor %}
+{% endif %}
+
+{% if dimension.selected_samples %}
+## Representative samples
+{% for sample in dimension.selected_samples %}
+### {{ sample.benchmark_display_name }} / {{ sample.sample_id }}
+
+**Selection reason:** {{ sample.selection_reason }}
+
+{% if sample.input_excerpt or sample.input_text %}
+```text
+{{ sample.input_excerpt or sample.input_text }}
+```
+{% endif %}
+
+{% if sample.output_excerpt or sample.output_text %}
+```text
+{{ sample.output_excerpt or sample.output_text }}
+```
+{% endif %}
+
+{% if sample.sample_highlights %}
+**Highlights:** {{ sample.sample_highlights|join(", ") }}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if dimension.warnings %}
+## Warnings
+{% for warning in dimension.warnings %}
+- {{ warning }}
+{% endfor %}
+{% endif %}

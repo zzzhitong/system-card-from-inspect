@@ -1,0 +1,36 @@
+report:
+  title: "MiniMax M2.5 System Card"
+  model_name: "MiniMax M2.5"
+  model_id: "openai/minimax-m2.5"
+  language: "zh"
+  organization: "Evaluation Team"
+  notes: "Example manifest for selecting a subset of logs for the markdown MVP."
+
+include_runs:
+  - task: "xstest"
+    task_args:
+      subset: "safe"
+  - task: "xstest"
+    task_args:
+      subset: "unsafe"
+  - task: "truthfulqa"
+    task_args:
+      target: "mc1"
+  - task: "truthfulqa"
+    task_args:
+      target: "mc2"
+  - task: "strong_reject"
+  - task: "simpleqa"
+  - task: "simpleqa_verified"
+  - task: "mask"
+  - task: "persistbench_sycophancy"
+  - task: "agentic_misalignment"
+  - task: "agentdojo"
+  - task: "sycophancy"
+  - task: "sad_influence"
+  - task: "sad_facts_llms"
+  - task: "sad_stages_oversight"
+  - task: "mmlu_0_shot"
+  - task: "mgsm"
+
+exclude_runs: []

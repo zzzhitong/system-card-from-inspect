@@ -1,0 +1,11 @@
+benchmark_hints:
+  b3:
+    evaluation_questions:
+      - "How robust is the model against agentic security attacks such as prompt injection, tool misuse, and context exfiltration?"
+      - "Which applications, attack types, and scoring modes are most exposed?"
+      - "Do the highest-risk failures imply deployment-sensitive agent/tool security weaknesses?"
+    assessed_risk_or_capability_scope: "agentic AI security, prompt/context exfiltration, tool compromise, and behavior manipulation"
+    deployment_focus:
+      - "tool-argument safety"
+      - "untrusted tool description handling"
+      - "context and transcript leakage controls"

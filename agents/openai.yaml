@@ -1,0 +1,4 @@
+interface:
+  display_name: "System Card from Inspect"
+  short_description: "Generate reviewable system-card markdown from Inspect eval logs."
+  default_prompt: "Generate benchmark- and dimension-level markdown from Inspect eval logs, preserving traceable metrics, representative samples, and warnings."

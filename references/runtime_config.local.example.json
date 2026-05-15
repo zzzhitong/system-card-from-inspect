@@ -1,0 +1,19 @@
+{
+  "runtime": {
+    "python_candidates": [
+      "inspect_evals/.venv/Scripts/python.exe",
+      "inspect_evals/.venv/bin/python",
+      "python",
+      "python3"
+    ],
+    "working_directory": ".",
+    "env_files": [
+      ".env",
+      "inspect_evals/.env"
+    ],
+    "env": {
+      "SYSTEM_CARD_ANALYSIS_PROVIDER": "azure",
+      "SYSTEM_CARD_ANALYSIS_MODEL": "gpt-5.4"
+    }
+  }
+}

@@ -1,0 +1,4882 @@
+benchmarks:
+  xstest_safe:
+    display_name: XSTest (Safe)
+    task_name: xstest
+    match:
+      subset: safe
+    dimension: safeguards
+    summary_focus: refusal calibration on benign prompts
+    primary_metrics:
+    - refusal_rate
+    sample_selection:
+      failure_score_values:
+      - I
+      - P
+      success_score_values:
+      - C
+      max_samples: 3
+  xstest_unsafe:
+    display_name: XSTest (Unsafe)
+    task_name: xstest
+    match:
+      subset: unsafe
+    dimension: safeguards
+    summary_focus: refusal on unsafe prompts
+    primary_metrics:
+    - refusal_rate
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      success_score_values:
+      - I
+      max_samples: 3
+  strong_reject_default:
+    display_name: StrongREJECT (Default)
+    task_name: strong_reject
+    match:
+      jailbreak_method: None
+    dimension: safeguards
+    summary_focus: direct harmful prompting
+    primary_metrics:
+    - jailbreak_rate
+    - strong_reject_metric
+    sample_selection:
+      failure_score_values:
+      - 1
+      - 1.0
+      - '1'
+      - C
+      - P
+      max_samples: 3
+  strong_reject_aim:
+    display_name: StrongREJECT (AIM)
+    task_name: strong_reject
+    match:
+      jailbreak_method: AIM
+    dimension: safeguards
+    summary_focus: AIM jailbreak prompting
+    primary_metrics:
+    - jailbreak_rate
+    - strong_reject_metric
+    sample_selection:
+      failure_score_values:
+      - 1
+      - 1.0
+      - '1'
+      - C
+      - P
+      max_samples: 3
+  truthfulqa_mc1:
+    display_name: TruthfulQA (MC1)
+    task_name: truthfulqa
+    match:
+      target: mc1
+    dimension: honesty
+    summary_focus: single-best-answer truthfulness
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - I
+      - 0
+      - 0.0
+      - incorrect
+      max_samples: 3
+  truthfulqa_mc2:
+    display_name: TruthfulQA (MC2)
+    task_name: truthfulqa
+    match:
+      target: mc2
+    dimension: honesty
+    summary_focus: multi-answer truthfulness
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - I
+      - 0
+      - 0.0
+      - incorrect
+      max_samples: 3
+  simpleqa:
+    display_name: SimpleQA
+    task_name: simpleqa
+    match:
+      scorer: original
+    dimension: honesty
+    summary_focus: short factual question answering
+    primary_metrics:
+    - correct
+    - incorrect
+    - not_attempted
+    - f_score
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+  simpleqa_verified:
+    display_name: SimpleQA Verified
+    task_name: simpleqa_verified
+    match:
+      scorer: original
+    dimension: honesty
+    summary_focus: short factual QA with verified answers
+    primary_metrics:
+    - correct
+    - incorrect
+    - not_attempted
+    - correct_given_attempted
+    - f_score
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 4
+  mask:
+    display_name: MASK
+    task_name: mask
+    match: {}
+    dimension: honesty
+    summary_focus: honesty versus accuracy under pressure
+    primary_metrics:
+    - overall_honesty
+    - overall_honesty@n
+    - overall_accuracy
+    sample_selection:
+      failure_score_values:
+      - lie
+      - incorrect
+      - evade
+      max_samples: 4
+  sycophancy:
+    display_name: Sycophancy Eval
+    task_name: sycophancy
+    match: {}
+    dimension: memory_and_sycophancy
+    summary_focus: stance stability under challenge
+    primary_metrics:
+    - truthfulness
+    - admits_mistake
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      max_samples: 3
+  persistbench_sycophancy:
+    display_name: PersistBench (Sycophancy)
+    task_name: persistbench_sycophancy
+    match: {}
+    dimension: memory_and_sycophancy
+    summary_focus: memory-driven sycophancy
+    primary_metrics:
+    - failure_rate
+    - score
+    sample_selection:
+      failure_score_values:
+      - 4
+      - 5
+      - '4'
+      - '5'
+      max_samples: 4
+  sad_influence:
+    display_name: SAD Influence
+    task_name: sad_influence
+    match: {}
+    dimension: contextual_awareness
+    summary_focus: LLM influence understanding
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      max_samples: 3
+  sad_facts_llms:
+    display_name: SAD Facts (LLMs)
+    task_name: sad_facts_llms
+    match: {}
+    dimension: contextual_awareness
+    summary_focus: facts about LLM systems
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      max_samples: 3
+  sad_facts_human_defaults:
+    display_name: SAD Facts (Human Defaults)
+    task_name: sad_facts_human_defaults
+    match: {}
+    dimension: contextual_awareness
+    summary_focus: human-default oversight knowledge
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      max_samples: 3
+  sad_stages_oversight:
+    display_name: SAD Stages Oversight
+    task_name: sad_stages_oversight
+    match: {}
+    dimension: contextual_awareness
+    summary_focus: staged oversight scenarios
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      max_samples: 3
+  agentic_misalignment_blackmail_replacement:
+    display_name: Agentic Misalignment (blackmail / replacement)
+    task_name: agentic_misalignment
+    match:
+      scenario: blackmail
+      urgency_type: replacement
+    dimension: agentic_safety
+    summary_focus: blackmail scenario with replacement urgency
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 1
+      - 1.0
+      - '1'
+      - harmful
+      max_samples: 3
+  agentic_misalignment_blackmail_none:
+    display_name: Agentic Misalignment (blackmail / none)
+    task_name: agentic_misalignment
+    match:
+      scenario: blackmail
+      urgency_type: none
+    dimension: agentic_safety
+    summary_focus: blackmail scenario without replacement urgency
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 1
+      - 1.0
+      - '1'
+      - harmful
+      max_samples: 3
+  agentic_misalignment_leaking_replacement:
+    display_name: Agentic Misalignment (leaking / replacement)
+    task_name: agentic_misalignment
+    match:
+      scenario: leaking
+      urgency_type: replacement
+    dimension: agentic_safety
+    summary_focus: leaking scenario with replacement urgency
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 1
+      - 1.0
+      - '1'
+      - harmful
+      max_samples: 3
+  agentic_misalignment_leaking_none:
+    display_name: Agentic Misalignment (leaking / none)
+    task_name: agentic_misalignment
+    match:
+      scenario: leaking
+      urgency_type: none
+    dimension: agentic_safety
+    summary_focus: leaking scenario without replacement urgency
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 1
+      - 1.0
+      - '1'
+      - harmful
+      max_samples: 3
+  agentic_misalignment_murder_replacement:
+    display_name: Agentic Misalignment (murder / replacement)
+    task_name: agentic_misalignment
+    match:
+      scenario: murder
+      urgency_type: replacement
+    dimension: agentic_safety
+    summary_focus: murder scenario with replacement urgency
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 1
+      - 1.0
+      - '1'
+      - harmful
+      max_samples: 3
+  agentic_misalignment_murder_none:
+    display_name: Agentic Misalignment (murder / none)
+    task_name: agentic_misalignment
+    match:
+      scenario: murder
+      urgency_type: none
+    dimension: agentic_safety
+    summary_focus: murder scenario without replacement urgency
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 1
+      - 1.0
+      - '1'
+      - harmful
+      max_samples: 3
+  agentdojo_banking:
+    display_name: AgentDojo (banking)
+    task_name: agentdojo
+    match:
+      workspace: banking
+    dimension: agentic_safety
+    summary_focus: prompt injection resistance in the banking workspace
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - I
+      - '0'
+      - '0.0'
+      max_samples: 3
+  agentdojo_slack:
+    display_name: AgentDojo (slack)
+    task_name: agentdojo
+    match:
+      workspace: slack
+    dimension: agentic_safety
+    summary_focus: prompt injection resistance in the slack workspace
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - I
+      - '0'
+      - '0.0'
+      max_samples: 3
+  agentdojo_travel:
+    display_name: AgentDojo (travel)
+    task_name: agentdojo
+    match:
+      workspace: travel
+    dimension: agentic_safety
+    summary_focus: prompt injection resistance in the travel workspace
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - I
+      - '0'
+      - '0.0'
+      max_samples: 3
+  b3:
+    display_name: B3
+    task_name: b3
+    match: {}
+    dimension: agentic_safety
+    summary_focus: agentic AI security vulnerabilities across prompt attacks, instruction
+      leakage, tool compromise, and behavior manipulation
+    primary_metrics:
+    - mean
+    - stderr
+    sample_selection:
+      failure_score_min: 0.7
+      success_score_max: 0.05
+      max_samples: 4
+  agentic_misalignment:
+    display_name: Agentic Misalignment
+    task_name: agentic_misalignment
+    match: {}
+    dimension: agentic_safety
+    summary_focus: harmful behavior in agentic scenarios
+    primary_metrics:
+    - harmful
+    - classifier_verdict
+    sample_selection:
+      failure_score_values:
+      - 1
+      - 1.0
+      - '1'
+      - harmful
+      max_samples: 4
+  healthbench_full:
+    display_name: HealthBench (Full)
+    task_name: healthbench
+    match:
+      subset: full
+    dimension: capabilities
+    summary_focus: medical helpfulness across the full subset
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+  healthbench_hard:
+    display_name: HealthBench (Hard)
+    task_name: healthbench
+    match:
+      subset: hard
+    dimension: capabilities
+    summary_focus: medical helpfulness on hard cases
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+  healthbench_consensus:
+    display_name: HealthBench (Consensus)
+    task_name: healthbench
+    match:
+      subset: consensus
+    dimension: capabilities
+    summary_focus: medical helpfulness on consensus subset
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+  healthbench_meta_eval:
+    display_name: HealthBench (Meta Eval)
+    task_name: healthbench
+    match:
+      subset: meta_eval
+    dimension: capabilities
+    summary_focus: medical helpfulness on meta-eval subset
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+  mmlu_zh_cn:
+    display_name: MMLU 0-shot
+    task_name: mmlu_0_shot
+    match:
+      language: EN_US
+      cot: false
+    dimension: capabilities
+    summary_focus: Chinese zero-shot multiple-choice knowledge
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+  mgsm_zh:
+    display_name: MGSM (zh)
+    task_name: mgsm
+    match:
+      languages:
+      - zh
+      - en
+      use_cot: false
+    dimension: capabilities
+    summary_focus: Chinese grade-school math reasoning
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+  bbq:
+    display_name: BBQ
+    task_name: bbq
+    match: {}
+    dimension: fairness
+    summary_focus: bias and ambiguity in question answering
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 4
+  abstention_bench:
+    display_name: AbstentionBench
+    task_name: abstention_bench
+    match: {}
+    dimension: safeguards
+    summary_focus: Evaluating abstention across 20 diverse datasets, including questions
+      with unknown answers, underspecification, false premises, subjective interpretations,
+      and outdated information.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: abstention_bench/eval.yaml
+  agent_bench_os:
+    display_name: AgentBench (Os)
+    task_name: agent_bench_os
+    match: {}
+    dimension: coding
+    summary_focus: A benchmark designed to evaluate LLMs as Agents
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: agent_bench/eval.yaml
+  agentharm:
+    display_name: AgentHarm
+    task_name: agentharm
+    match: {}
+    dimension: safeguards
+    summary_focus: Assesses whether AI agents might engage in harmful activities by
+      testing their responses to malicious prompts in areas like cybercrime, harassment,
+      and fraud, aiming to ensure safe behavior.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: agentharm/eval.yaml
+  agentharm_benign:
+    display_name: AgentHarm (Benign)
+    task_name: agentharm_benign
+    match: {}
+    dimension: safeguards
+    summary_focus: Assesses whether AI agents might engage in harmful activities by
+      testing their responses to malicious prompts in areas like cybercrime, harassment,
+      and fraud, aiming to ensure safe behavior.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: agentharm/eval.yaml
+  agie_aqua_rat:
+    display_name: Agie Aqua Rat
+    task_name: agie_aqua_rat
+    match: {}
+    dimension: knowledge
+    summary_focus: AGIEval is a human-centric benchmark specifically designed to evaluate
+      the general abilities of foundation models in tasks pertinent to human cognition
+      and problem-solving.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: agieval/eval.yaml
+  agie_logiqa_en:
+    display_name: Agie Logiqa En
+    task_name: agie_logiqa_en
+    match: {}
+    dimension: knowledge
+    summary_focus: AGIEval is a human-centric benchmark specifically designed to evaluate
+      the general abilities of foundation models in tasks pertinent to human cognition
+      and problem-solving.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: agieval/eval.yaml
+  agie_lsat_ar:
+    display_name: Agie Lsat Ar
+    task_name: agie_lsat_ar
+    match: {}
+    dimension: knowledge
+    summary_focus: AGIEval is a human-centric benchmark specifically designed to evaluate
+      the general abilities of foundation models in tasks pertinent to human cognition
+      and problem-solving.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: agieval/eval.yaml
+  agie_lsat_lr:
+    display_name: Agie Lsat Lr
+    task_name: agie_lsat_lr
+    match: {}
+    dimension: knowledge
+    summary_focus: AGIEval is a human-centric benchmark specifically designed to evaluate
+      the general abilities of foundation models in tasks pertinent to human cognition
+      and problem-solving.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: agieval/eval.yaml
+  agie_lsat_rc:
+    display_name: Agie Lsat Rc
+    task_name: agie_lsat_rc
+    match: {}
+    dimension: knowledge
+    summary_focus: AGIEval is a human-centric benchmark specifically designed to evaluate
+      the general abilities of foundation models in tasks pertinent to human cognition
+      and problem-solving.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: agieval/eval.yaml
+  agie_math:
+    display_name: Agie Math
+    task_name: agie_math
+    match: {}
+    dimension: knowledge
+    summary_focus: AGIEval is a human-centric benchmark specifically designed to evaluate
+      the general abilities of foundation models in tasks pertinent to human cognition
+      and problem-solving.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: agieval/eval.yaml
+  agie_sat_en:
+    display_name: Agie Sat En
+    task_name: agie_sat_en
+    match: {}
+    dimension: knowledge
+    summary_focus: AGIEval is a human-centric benchmark specifically designed to evaluate
+      the general abilities of foundation models in tasks pertinent to human cognition
+      and problem-solving.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: agieval/eval.yaml
+  agie_sat_en_without_passage:
+    display_name: Agie Sat En Without Passage
+    task_name: agie_sat_en_without_passage
+    match: {}
+    dimension: knowledge
+    summary_focus: AGIEval is a human-centric benchmark specifically designed to evaluate
+      the general abilities of foundation models in tasks pertinent to human cognition
+      and problem-solving.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: agieval/eval.yaml
+  agie_sat_math:
+    display_name: Agie Sat Math
+    task_name: agie_sat_math
+    match: {}
+    dimension: knowledge
+    summary_focus: AGIEval is a human-centric benchmark specifically designed to evaluate
+      the general abilities of foundation models in tasks pertinent to human cognition
+      and problem-solving.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: agieval/eval.yaml
+  aime2024:
+    display_name: AIME 2024
+    task_name: aime2024
+    match: {}
+    dimension: mathematics
+    summary_focus: A benchmark for evaluating AI's ability to solve challenging mathematics
+      problems from the 2024 AIME - a prestigious high school mathematics competition.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Mathematics
+    source_eval_yaml: aime2024/eval.yaml
+  aime2025:
+    display_name: AIME 2025
+    task_name: aime2025
+    match: {}
+    dimension: mathematics
+    summary_focus: A benchmark for evaluating AI's ability to solve challenging mathematics
+      problems from the 2025 AIME - a prestigious high school mathematics competition.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Mathematics
+    source_eval_yaml: aime2025/eval.yaml
+  aime2026:
+    display_name: AIME 2026
+    task_name: aime2026
+    match: {}
+    dimension: mathematics
+    summary_focus: A benchmark for evaluating AI's ability to solve challenging mathematics
+      problems from the 2026 AIME - a prestigious high school mathematics competition.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Mathematics
+    source_eval_yaml: aime2026/eval.yaml
+  air_bench:
+    display_name: AIR Bench
+    task_name: air_bench
+    match: {}
+    dimension: knowledge
+    summary_focus: A safety benchmark evaluating language models against risk categories
+      derived from government regulations and company policies.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: air_bench/eval.yaml
+  anima:
+    display_name: ANIMA
+    task_name: anima
+    match: {}
+    dimension: safeguards
+    summary_focus: Evaluates the quality of a model's moral reasoning about animal
+      welfare across 13 ethical dimensions.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: anima/eval.yaml
+  ape_eval:
+    display_name: APE (Eval)
+    task_name: ape_eval
+    match: {}
+    dimension: safeguards
+    summary_focus: Measures a model's willingness to attempt persuasion on harmful,
+      controversial, and benign topics.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: ape/eval.yaml
+  apps:
+    display_name: APPS
+    task_name: apps
+    match: {}
+    dimension: coding
+    summary_focus: APPS is a dataset for evaluating model performance on Python programming
+      tasks across three difficulty levels consisting of 1,000 at introductory, 3,000
+      at interview, and 1,000 at competition level.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: apps/eval.yaml
+  arc_easy:
+    display_name: ARC (Easy)
+    task_name: arc_easy
+    match: {}
+    dimension: reasoning
+    summary_focus: Dataset of natural, grade-school science multiple-choice questions
+      (authored for human tests).
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: arc/eval.yaml
+  arc_challenge:
+    display_name: ARC (Challenge)
+    task_name: arc_challenge
+    match: {}
+    dimension: reasoning
+    summary_focus: Dataset of natural, grade-school science multiple-choice questions
+      (authored for human tests).
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: arc/eval.yaml
+  assistant_bench_closed_book_zero_shot:
+    display_name: AssistantBench (Closed Book Zero Shot)
+    task_name: assistant_bench_closed_book_zero_shot
+    match: {}
+    dimension: assistants
+    summary_focus: Tests whether AI agents can perform real-world time-consuming tasks
+      on the web.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Assistants
+    source_eval_yaml: assistant_bench/eval.yaml
+  assistant_bench_closed_book_one_shot:
+    display_name: AssistantBench (Closed Book One Shot)
+    task_name: assistant_bench_closed_book_one_shot
+    match: {}
+    dimension: assistants
+    summary_focus: Tests whether AI agents can perform real-world time-consuming tasks
+      on the web.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Assistants
+    source_eval_yaml: assistant_bench/eval.yaml
+  assistant_bench_web_search_zero_shot:
+    display_name: AssistantBench (Web Search Zero Shot)
+    task_name: assistant_bench_web_search_zero_shot
+    match: {}
+    dimension: assistants
+    summary_focus: Tests whether AI agents can perform real-world time-consuming tasks
+      on the web.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Assistants
+    source_eval_yaml: assistant_bench/eval.yaml
+  assistant_bench_web_search_one_shot:
+    display_name: AssistantBench (Web Search One Shot)
+    task_name: assistant_bench_web_search_one_shot
+    match: {}
+    dimension: assistants
+    summary_focus: Tests whether AI agents can perform real-world time-consuming tasks
+      on the web.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Assistants
+    source_eval_yaml: assistant_bench/eval.yaml
+  assistant_bench_web_browser:
+    display_name: AssistantBench (Web Browser)
+    task_name: assistant_bench_web_browser
+    match: {}
+    dimension: assistants
+    summary_focus: Tests whether AI agents can perform real-world time-consuming tasks
+      on the web.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Assistants
+    source_eval_yaml: assistant_bench/eval.yaml
+  bbeh:
+    display_name: BIG-Bench Extra Hard
+    task_name: bbeh
+    match: {}
+    dimension: reasoning
+    summary_focus: A reasoning capability dataset that replaces each task in BIG-Bench-Hard
+      with a novel task that probes a similar reasoning capability but exhibits significantly
+      increased difficulty.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: bbeh/eval.yaml
+  bbeh_mini:
+    display_name: BIG-Bench Extra Hard (Mini)
+    task_name: bbeh_mini
+    match: {}
+    dimension: reasoning
+    summary_focus: A reasoning capability dataset that replaces each task in BIG-Bench-Hard
+      with a novel task that probes a similar reasoning capability but exhibits significantly
+      increased difficulty.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: bbeh/eval.yaml
+  bbh:
+    display_name: BBH
+    task_name: bbh
+    match: {}
+    dimension: reasoning
+    summary_focus: Tests AI models on a suite of 23 challenging BIG-Bench tasks that
+      previously proved difficult even for advanced language models to solve.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: bbh/eval.yaml
+  bfcl:
+    display_name: BFCL
+    task_name: bfcl
+    match: {}
+    dimension: assistants
+    summary_focus: Evaluates LLM function/tool-calling ability on a simplified split
+      of the Berkeley Function-Calling Leaderboard (BFCL).
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Assistants
+    source_eval_yaml: bfcl/eval.yaml
+  bigcodebench:
+    display_name: BigCodeBench
+    task_name: bigcodebench
+    match: {}
+    dimension: coding
+    summary_focus: Python coding benchmark with 1,140 diverse questions drawing on
+      numerous python libraries.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: bigcodebench/eval.yaml
+  bold:
+    display_name: BOLD
+    task_name: bold
+    match: {}
+    dimension: fairness
+    summary_focus: 'A dataset to measure fairness in open-ended text generation, covering
+      five domains: profession, gender, race, religious ideologies, and political
+      ideologies.'
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Bias
+    source_eval_yaml: bold/eval.yaml
+  boolq:
+    display_name: BoolQ
+    task_name: boolq
+    match: {}
+    dimension: reasoning
+    summary_focus: Reading comprehension dataset that queries for complex, non-factoid
+      information, and require difficult entailment-like inference to solve.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: boolq/eval.yaml
+  browse_comp:
+    display_name: BrowseComp
+    task_name: browse_comp
+    match: {}
+    dimension: assistants
+    summary_focus: A benchmark for evaluating agents' ability to browse the web.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Assistants
+    source_eval_yaml: browse_comp/eval.yaml
+  chembench:
+    display_name: ChemBench
+    task_name: chembench
+    match: {}
+    dimension: knowledge
+    summary_focus: ChemBench is designed to reveal limitations of current frontier
+      models for use in the chemical sciences.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: chembench/eval.yaml
+  class_eval:
+    display_name: ClassEval
+    task_name: class_eval
+    match: {}
+    dimension: coding
+    summary_focus: Evaluates LLMs on class-level code generation with 100 tasks constructed
+      over 500 person-hours.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: class_eval/eval.yaml
+  coconot:
+    display_name: The Art of Saying No
+    task_name: coconot
+    match: {}
+    dimension: safeguards
+    summary_focus: Dataset with 1001 samples to test noncompliance capabilities of
+      language models.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: coconot/eval.yaml
+  commonsense_qa:
+    display_name: CommonsenseQA
+    task_name: commonsense_qa
+    match: {}
+    dimension: knowledge
+    summary_focus: Evaluates an AI model's ability to correctly answer everyday questions
+      that rely on basic commonsense knowledge and understanding of the world.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: commonsense_qa/eval.yaml
+  compute_eval:
+    display_name: ComputeEval
+    task_name: compute_eval
+    match: {}
+    dimension: coding
+    summary_focus: Evaluates LLM capability to generate correct CUDA code for kernel
+      implementation, memory management, and parallel algorithm optimization tasks.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: compute_eval/eval.yaml
+  core_bench:
+    display_name: CORE-Bench
+    task_name: core_bench
+    match: {}
+    dimension: coding
+    summary_focus: Evaluate how well an LLM Agent is at computationally reproducing
+      the results of a set of scientific papers.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: core_bench/eval.yaml
+  cti_realm_25:
+    display_name: CTI-REALM (25)
+    task_name: cti_realm_25
+    match: {}
+    dimension: cybersecurity
+    summary_focus: 'Evaluates AI systems'' ability to analyze cyber threat intelligence
+      and develop comprehensive detection capabilities through a realistic 5-subtask
+      workflow: MITRE technique mapping, data source discovery, Sigma rule gener'
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: cti_realm/eval.yaml
+  cti_realm_50:
+    display_name: CTI-REALM (50)
+    task_name: cti_realm_50
+    match: {}
+    dimension: cybersecurity
+    summary_focus: 'Evaluates AI systems'' ability to analyze cyber threat intelligence
+      and develop comprehensive detection capabilities through a realistic 5-subtask
+      workflow: MITRE technique mapping, data source discovery, Sigma rule gener'
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: cti_realm/eval.yaml
+  cti_realm_25_minimal:
+    display_name: CTI-REALM (25 Minimal)
+    task_name: cti_realm_25_minimal
+    match: {}
+    dimension: cybersecurity
+    summary_focus: 'Evaluates AI systems'' ability to analyze cyber threat intelligence
+      and develop comprehensive detection capabilities through a realistic 5-subtask
+      workflow: MITRE technique mapping, data source discovery, Sigma rule gener'
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: cti_realm/eval.yaml
+  cti_realm_25_seeded:
+    display_name: CTI-REALM (25 Seeded)
+    task_name: cti_realm_25_seeded
+    match: {}
+    dimension: cybersecurity
+    summary_focus: 'Evaluates AI systems'' ability to analyze cyber threat intelligence
+      and develop comprehensive detection capabilities through a realistic 5-subtask
+      workflow: MITRE technique mapping, data source discovery, Sigma rule gener'
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: cti_realm/eval.yaml
+  cve_bench:
+    display_name: CVEBench
+    task_name: cve_bench
+    match: {}
+    dimension: cybersecurity
+    summary_focus: Characterises an AI Agent's capability to exploit real-world web
+      application vulnerabilities.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: cve_bench/eval.yaml
+  cybench:
+    display_name: Cybench
+    task_name: cybench
+    match: {}
+    dimension: cybersecurity
+    summary_focus: Tests language models on cybersecurity skills using 39 of 40 practical,
+      professional-level challenges taken from cybersecurity competitions, designed
+      to cover various difficulty levels and security concepts.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: cybench/eval.yaml
+  cybergym:
+    display_name: CyberGym
+    task_name: cybergym
+    match: {}
+    dimension: cybersecurity
+    summary_focus: A large-scale, high-quality cybersecurity evaluation framework
+      designed to rigorously assess the capabilities of AI agents on real-world vulnerability
+      analysis tasks.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: cybergym/eval.yaml
+  cybermetric_80:
+    display_name: CyberMetric (80)
+    task_name: cybermetric_80
+    match: {}
+    dimension: cybersecurity
+    summary_focus: Datasets containing 80, 500, 2000 and 10000 multiple-choice questions,
+      designed to evaluate understanding across nine domains within cybersecurity
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: cybermetric/eval.yaml
+  cybermetric_500:
+    display_name: CyberMetric (500)
+    task_name: cybermetric_500
+    match: {}
+    dimension: cybersecurity
+    summary_focus: Datasets containing 80, 500, 2000 and 10000 multiple-choice questions,
+      designed to evaluate understanding across nine domains within cybersecurity
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: cybermetric/eval.yaml
+  cybermetric_2000:
+    display_name: CyberMetric (2000)
+    task_name: cybermetric_2000
+    match: {}
+    dimension: cybersecurity
+    summary_focus: Datasets containing 80, 500, 2000 and 10000 multiple-choice questions,
+      designed to evaluate understanding across nine domains within cybersecurity
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: cybermetric/eval.yaml
+  cybermetric_10000:
+    display_name: CyberMetric (10000)
+    task_name: cybermetric_10000
+    match: {}
+    dimension: cybersecurity
+    summary_focus: Datasets containing 80, 500, 2000 and 10000 multiple-choice questions,
+      designed to evaluate understanding across nine domains within cybersecurity
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: cybermetric/eval.yaml
+  cyse2_interpreter_abuse:
+    display_name: Cyse2 Interpreter Abuse
+    task_name: cyse2_interpreter_abuse
+    match: {}
+    dimension: cybersecurity
+    summary_focus: Assesses language models for cybersecurity risks, specifically
+      testing their potential to misuse programming interpreters, vulnerability to
+      malicious prompt injections, and capability to exploit known software vulnerabil
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: cyberseceval_2/eval.yaml
+  cyse2_prompt_injection:
+    display_name: Cyse2 Prompt Injection
+    task_name: cyse2_prompt_injection
+    match: {}
+    dimension: cybersecurity
+    summary_focus: Assesses language models for cybersecurity risks, specifically
+      testing their potential to misuse programming interpreters, vulnerability to
+      malicious prompt injections, and capability to exploit known software vulnerabil
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: cyberseceval_2/eval.yaml
+  cyse2_vulnerability_exploit:
+    display_name: Cyse2 Vulnerability Exploit
+    task_name: cyse2_vulnerability_exploit
+    match: {}
+    dimension: cybersecurity
+    summary_focus: Assesses language models for cybersecurity risks, specifically
+      testing their potential to misuse programming interpreters, vulnerability to
+      malicious prompt injections, and capability to exploit known software vulnerabil
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: cyberseceval_2/eval.yaml
+  cyse3_visual_prompt_injection:
+    display_name: Cyse3 Visual Prompt Injection
+    task_name: cyse3_visual_prompt_injection
+    match: {}
+    dimension: cybersecurity
+    summary_focus: Evaluates Large Language Models for cybersecurity risk to third
+      parties, application developers and end users.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: cyberseceval_3/eval.yaml
+  cyse4_mitre:
+    display_name: Cyse4 Mitre
+    task_name: cyse4_mitre
+    match: {}
+    dimension: cybersecurity
+    summary_focus: A suite of cybersecurity evaluation benchmarks adapted from Meta's
+      PurpleLlama CybersecurityBenchmarks.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: cyberseceval_4/eval.yaml
+  cyse4_mitre_frr:
+    display_name: Cyse4 Mitre Frr
+    task_name: cyse4_mitre_frr
+    match: {}
+    dimension: cybersecurity
+    summary_focus: A suite of cybersecurity evaluation benchmarks adapted from Meta's
+      PurpleLlama CybersecurityBenchmarks.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: cyberseceval_4/eval.yaml
+  cyse4_instruct:
+    display_name: Cyse4 Instruct
+    task_name: cyse4_instruct
+    match: {}
+    dimension: cybersecurity
+    summary_focus: A suite of cybersecurity evaluation benchmarks adapted from Meta's
+      PurpleLlama CybersecurityBenchmarks.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: cyberseceval_4/eval.yaml
+  cyse4_autocomplete:
+    display_name: Cyse4 Autocomplete
+    task_name: cyse4_autocomplete
+    match: {}
+    dimension: cybersecurity
+    summary_focus: A suite of cybersecurity evaluation benchmarks adapted from Meta's
+      PurpleLlama CybersecurityBenchmarks.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: cyberseceval_4/eval.yaml
+  cyse4_multiturn_phishing:
+    display_name: Cyse4 Multiturn Phishing
+    task_name: cyse4_multiturn_phishing
+    match: {}
+    dimension: cybersecurity
+    summary_focus: A suite of cybersecurity evaluation benchmarks adapted from Meta's
+      PurpleLlama CybersecurityBenchmarks.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: cyberseceval_4/eval.yaml
+  cyse4_multilingual_prompt_injection:
+    display_name: Cyse4 Multilingual Prompt Injection
+    task_name: cyse4_multilingual_prompt_injection
+    match: {}
+    dimension: cybersecurity
+    summary_focus: A suite of cybersecurity evaluation benchmarks adapted from Meta's
+      PurpleLlama CybersecurityBenchmarks.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: cyberseceval_4/eval.yaml
+  cyse4_malware_analysis:
+    display_name: Cyse4 Malware Analysis
+    task_name: cyse4_malware_analysis
+    match: {}
+    dimension: cybersecurity
+    summary_focus: A suite of cybersecurity evaluation benchmarks adapted from Meta's
+      PurpleLlama CybersecurityBenchmarks.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: cyberseceval_4/eval.yaml
+  cyse4_threat_intelligence:
+    display_name: Cyse4 Threat Intelligence
+    task_name: cyse4_threat_intelligence
+    match: {}
+    dimension: cybersecurity
+    summary_focus: A suite of cybersecurity evaluation benchmarks adapted from Meta's
+      PurpleLlama CybersecurityBenchmarks.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: cyberseceval_4/eval.yaml
+  docvqa:
+    display_name: DocVQA
+    task_name: docvqa
+    match: {}
+    dimension: multimodal
+    summary_focus: DocVQA is a Visual Question Answering benchmark that consists of
+      50,000 questions covering 12,000+ document images.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Multimodal
+    source_eval_yaml: docvqa/eval.yaml
+  drop:
+    display_name: DROP
+    task_name: drop
+    match: {}
+    dimension: reasoning
+    summary_focus: Evaluates reading comprehension where models must resolve references
+      in a question, perhaps to multiple input positions, and perform discrete operations
+      over them (such as addition, counting, or sorting).
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: drop/eval.yaml
+  ds1000:
+    display_name: DS-1000
+    task_name: ds1000
+    match: {}
+    dimension: coding
+    summary_focus: Code generation benchmark with a thousand data science problems
+      spanning seven Python libraries.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: ds1000/eval.yaml
+  fortress_adversarial:
+    display_name: FORTRESS (Adversarial)
+    task_name: fortress_adversarial
+    match: {}
+    dimension: safeguards
+    summary_focus: A dataset of 500 expert-crafted adversarial prompts with instance-based
+      rubrics of 4-7 binary questions for automated evaluation across 3 domains relevant
+      to national security and public safety (NSPS).
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: fortress/eval.yaml
+  fortress_benign:
+    display_name: FORTRESS (Benign)
+    task_name: fortress_benign
+    match: {}
+    dimension: safeguards
+    summary_focus: A dataset of 500 expert-crafted adversarial prompts with instance-based
+      rubrics of 4-7 binary questions for automated evaluation across 3 domains relevant
+      to national security and public safety (NSPS).
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: fortress/eval.yaml
+  frontier_cs:
+    display_name: Frontier-CS
+    task_name: frontier_cs
+    match: {}
+    dimension: coding
+    summary_focus: 238 open-ended computer science problems spanning algorithmic (172)
+      and research (66) tracks.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: frontier_cs/eval.yaml
+  frontier_cs_algorithmic:
+    display_name: Frontier-CS (Algorithmic)
+    task_name: frontier_cs_algorithmic
+    match: {}
+    dimension: coding
+    summary_focus: 238 open-ended computer science problems spanning algorithmic (172)
+      and research (66) tracks.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: frontier_cs/eval.yaml
+  frontier_cs_research:
+    display_name: Frontier-CS (Research)
+    task_name: frontier_cs_research
+    match: {}
+    dimension: coding
+    summary_focus: 238 open-ended computer science problems spanning algorithmic (172)
+      and research (66) tracks.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: frontier_cs/eval.yaml
+  frontierscience:
+    display_name: FrontierScience
+    task_name: frontierscience
+    match: {}
+    dimension: knowledge
+    summary_focus: Evaluates AI capabilities for expert-level scientific reasoning
+      across physics, chemistry, and biology.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: frontierscience/eval.yaml
+  gaia:
+    display_name: GAIA
+    task_name: gaia
+    match: {}
+    dimension: assistants
+    summary_focus: Proposes real-world questions that require a set of fundamental
+      abilities such as reasoning, multi-modality handling, web browsing, and generally
+      tool-use proficiency.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Assistants
+    source_eval_yaml: gaia/eval.yaml
+  gaia_level1:
+    display_name: GAIA (Level1)
+    task_name: gaia_level1
+    match: {}
+    dimension: assistants
+    summary_focus: Proposes real-world questions that require a set of fundamental
+      abilities such as reasoning, multi-modality handling, web browsing, and generally
+      tool-use proficiency.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Assistants
+    source_eval_yaml: gaia/eval.yaml
+  gaia_level2:
+    display_name: GAIA (Level2)
+    task_name: gaia_level2
+    match: {}
+    dimension: assistants
+    summary_focus: Proposes real-world questions that require a set of fundamental
+      abilities such as reasoning, multi-modality handling, web browsing, and generally
+      tool-use proficiency.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Assistants
+    source_eval_yaml: gaia/eval.yaml
+  gaia_level3:
+    display_name: GAIA (Level3)
+    task_name: gaia_level3
+    match: {}
+    dimension: assistants
+    summary_focus: Proposes real-world questions that require a set of fundamental
+      abilities such as reasoning, multi-modality handling, web browsing, and generally
+      tool-use proficiency.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Assistants
+    source_eval_yaml: gaia/eval.yaml
+  gdm_in_house_ctf:
+    display_name: GDM Dangerous Capabilities
+    task_name: gdm_in_house_ctf
+    match: {}
+    dimension: cybersecurity
+    summary_focus: CTF challenges covering web app vulnerabilities, off-the-shelf
+      exploits, databases, Linux privilege escalation, password cracking and spraying.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: gdm_in_house_ctf/eval.yaml
+  gdm_intercode_ctf:
+    display_name: InterCode
+    task_name: gdm_intercode_ctf
+    match: {}
+    dimension: cybersecurity
+    summary_focus: Tests AI's ability in coding, cryptography, reverse engineering,
+      and vulnerability identification through practical capture-the-flag (CTF) cybersecurity
+      scenarios.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: gdm_intercode_ctf/eval.yaml
+  gdm_sp01_e2e:
+    display_name: Gdm Sp01 E2E
+    task_name: gdm_sp01_e2e
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Ten real-world–inspired tasks from Google DeepMind's Dangerous
+      Capabilities Evaluations assessing self-proliferation behaviors (e.g., email
+      setup, model installation, web agent setup, wallet operations).
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_self_proliferation/eval.yaml
+  gdm_sp02_e2e:
+    display_name: Gdm Sp02 E2E
+    task_name: gdm_sp02_e2e
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Ten real-world–inspired tasks from Google DeepMind's Dangerous
+      Capabilities Evaluations assessing self-proliferation behaviors (e.g., email
+      setup, model installation, web agent setup, wallet operations).
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_self_proliferation/eval.yaml
+  gdm_sp03_e2e:
+    display_name: Gdm Sp03 E2E
+    task_name: gdm_sp03_e2e
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Ten real-world–inspired tasks from Google DeepMind's Dangerous
+      Capabilities Evaluations assessing self-proliferation behaviors (e.g., email
+      setup, model installation, web agent setup, wallet operations).
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_self_proliferation/eval.yaml
+  gdm_sp04_e2e:
+    display_name: Gdm Sp04 E2E
+    task_name: gdm_sp04_e2e
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Ten real-world–inspired tasks from Google DeepMind's Dangerous
+      Capabilities Evaluations assessing self-proliferation behaviors (e.g., email
+      setup, model installation, web agent setup, wallet operations).
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_self_proliferation/eval.yaml
+  gdm_sp05_e2e:
+    display_name: Gdm Sp05 E2E
+    task_name: gdm_sp05_e2e
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Ten real-world–inspired tasks from Google DeepMind's Dangerous
+      Capabilities Evaluations assessing self-proliferation behaviors (e.g., email
+      setup, model installation, web agent setup, wallet operations).
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_self_proliferation/eval.yaml
+  gdm_sp07_e2e:
+    display_name: Gdm Sp07 E2E
+    task_name: gdm_sp07_e2e
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Ten real-world–inspired tasks from Google DeepMind's Dangerous
+      Capabilities Evaluations assessing self-proliferation behaviors (e.g., email
+      setup, model installation, web agent setup, wallet operations).
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_self_proliferation/eval.yaml
+  gdm_sp08_e2e:
+    display_name: Gdm Sp08 E2E
+    task_name: gdm_sp08_e2e
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Ten real-world–inspired tasks from Google DeepMind's Dangerous
+      Capabilities Evaluations assessing self-proliferation behaviors (e.g., email
+      setup, model installation, web agent setup, wallet operations).
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_self_proliferation/eval.yaml
+  gdm_sp09_e2e:
+    display_name: Gdm Sp09 E2E
+    task_name: gdm_sp09_e2e
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Ten real-world–inspired tasks from Google DeepMind's Dangerous
+      Capabilities Evaluations assessing self-proliferation behaviors (e.g., email
+      setup, model installation, web agent setup, wallet operations).
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_self_proliferation/eval.yaml
+  gdm_sp10_e2e:
+    display_name: Gdm Sp10 E2E
+    task_name: gdm_sp10_e2e
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Ten real-world–inspired tasks from Google DeepMind's Dangerous
+      Capabilities Evaluations assessing self-proliferation behaviors (e.g., email
+      setup, model installation, web agent setup, wallet operations).
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_self_proliferation/eval.yaml
+  gdm_sp12_e2e:
+    display_name: Gdm Sp12 E2E
+    task_name: gdm_sp12_e2e
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Ten real-world–inspired tasks from Google DeepMind's Dangerous
+      Capabilities Evaluations assessing self-proliferation behaviors (e.g., email
+      setup, model installation, web agent setup, wallet operations).
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_self_proliferation/eval.yaml
+  gdm_self_reasoning_approved_directories:
+    display_name: GDM Dangerous Capabilities (Approved Directories)
+    task_name: gdm_self_reasoning_approved_directories
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Test AI's ability to reason about its environment.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_self_reasoning/eval.yaml
+  gdm_self_reasoning_calculator_improvement:
+    display_name: GDM Dangerous Capabilities (Calculator Improvement)
+    task_name: gdm_self_reasoning_calculator_improvement
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Test AI's ability to reason about its environment.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_self_reasoning/eval.yaml
+  gdm_self_reasoning_context_length_mod_instrumental_only:
+    display_name: GDM Dangerous Capabilities (Context Length Mod Instrumental Only)
+    task_name: gdm_self_reasoning_context_length_mod_instrumental_only
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Test AI's ability to reason about its environment.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_self_reasoning/eval.yaml
+  gdm_self_reasoning_context_length_mod_irreversibility_only:
+    display_name: GDM Dangerous Capabilities (Context Length Mod Irreversibility Only)
+    task_name: gdm_self_reasoning_context_length_mod_irreversibility_only
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Test AI's ability to reason about its environment.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_self_reasoning/eval.yaml
+  gdm_self_reasoning_database_tool:
+    display_name: GDM Dangerous Capabilities (Database Tool)
+    task_name: gdm_self_reasoning_database_tool
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Test AI's ability to reason about its environment.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_self_reasoning/eval.yaml
+  gdm_self_reasoning_latency_calculator:
+    display_name: GDM Dangerous Capabilities (Latency Calculator)
+    task_name: gdm_self_reasoning_latency_calculator
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Test AI's ability to reason about its environment.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_self_reasoning/eval.yaml
+  gdm_self_reasoning_max_messages_calculator:
+    display_name: GDM Dangerous Capabilities (Max Messages Calculator)
+    task_name: gdm_self_reasoning_max_messages_calculator
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Test AI's ability to reason about its environment.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_self_reasoning/eval.yaml
+  gdm_self_reasoning_max_tokens:
+    display_name: GDM Dangerous Capabilities (Max Tokens)
+    task_name: gdm_self_reasoning_max_tokens
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Test AI's ability to reason about its environment.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_self_reasoning/eval.yaml
+  gdm_self_reasoning_oversight_frequency:
+    display_name: GDM Dangerous Capabilities (Oversight Frequency)
+    task_name: gdm_self_reasoning_oversight_frequency
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Test AI's ability to reason about its environment.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_self_reasoning/eval.yaml
+  gdm_self_reasoning_read_logs:
+    display_name: GDM Dangerous Capabilities (Read Logs)
+    task_name: gdm_self_reasoning_read_logs
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Test AI's ability to reason about its environment.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_self_reasoning/eval.yaml
+  gdm_self_reasoning_turn_off_filters:
+    display_name: GDM Dangerous Capabilities (Turn Off Filters)
+    task_name: gdm_self_reasoning_turn_off_filters
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Test AI's ability to reason about its environment.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_self_reasoning/eval.yaml
+  gdm_classifier_evasion:
+    display_name: Gdm Classifier Evasion
+    task_name: gdm_classifier_evasion
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Test AI's ability to reason about and circumvent oversight.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_stealth/eval.yaml
+  gdm_cover_your_tracks:
+    display_name: Gdm Cover Your Tracks
+    task_name: gdm_cover_your_tracks
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Test AI's ability to reason about and circumvent oversight.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_stealth/eval.yaml
+  gdm_oversight_pattern:
+    display_name: Gdm Oversight Pattern
+    task_name: gdm_oversight_pattern
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Test AI's ability to reason about and circumvent oversight.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_stealth/eval.yaml
+  gdm_strategic_rule_breaking:
+    display_name: Gdm Strategic Rule Breaking
+    task_name: gdm_strategic_rule_breaking
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Test AI's ability to reason about and circumvent oversight.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: gdm_stealth/eval.yaml
+  gdpval:
+    display_name: GDPval
+    task_name: gdpval
+    match: {}
+    dimension: assistants
+    summary_focus: GDPval measures model performance on economically valuable, real-world
+      tasks across 44 occupations.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Assistants
+    source_eval_yaml: gdpval/eval.yaml
+  gpqa_diamond:
+    display_name: GPQA (Diamond)
+    task_name: gpqa_diamond
+    match: {}
+    dimension: knowledge
+    summary_focus: Contains challenging multiple-choice questions created by domain
+      experts in biology, physics, and chemistry, designed to test advanced scientific
+      understanding beyond basic internet searches.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: gpqa/eval.yaml
+  gsm8k:
+    display_name: GSM8K
+    task_name: gsm8k
+    match: {}
+    dimension: mathematics
+    summary_focus: Measures how effectively language models solve realistic, linguistically
+      rich math word problems suitable for grade-school-level mathematics.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Mathematics
+    source_eval_yaml: gsm8k/eval.yaml
+  healthbench_hard_2:
+    display_name: HealthBench (Hard)
+    task_name: healthbench_hard
+    match: {}
+    dimension: knowledge
+    summary_focus: A comprehensive evaluation benchmark designed to assess language
+      models' medical capabilities across a wide range of healthcare scenarios.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: healthbench/eval.yaml
+  healthbench_consensus_2:
+    display_name: HealthBench (Consensus)
+    task_name: healthbench_consensus
+    match: {}
+    dimension: knowledge
+    summary_focus: A comprehensive evaluation benchmark designed to assess language
+      models' medical capabilities across a wide range of healthcare scenarios.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: healthbench/eval.yaml
+  healthbench_meta_eval_2:
+    display_name: HealthBench (Meta Eval)
+    task_name: healthbench_meta_eval
+    match: {}
+    dimension: knowledge
+    summary_focus: A comprehensive evaluation benchmark designed to assess language
+      models' medical capabilities across a wide range of healthcare scenarios.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: healthbench/eval.yaml
+  hellaswag:
+    display_name: HellaSwag
+    task_name: hellaswag
+    match: {}
+    dimension: reasoning
+    summary_focus: Tests models' commonsense reasoning abilities by asking them to
+      select the most likely next step or continuation for a given everyday situation.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: hellaswag/eval.yaml
+  hle:
+    display_name: Humanity's Last Exam
+    task_name: hle
+    match: {}
+    dimension: knowledge
+    summary_focus: Humanity's Last Exam (HLE) is a multi-modal benchmark at the frontier
+      of human knowledge, designed to be the final closed-ended academic benchmark
+      of its kind with broad subject coverage.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: hle/eval.yaml
+  humaneval:
+    display_name: HumanEval
+    task_name: humaneval
+    match: {}
+    dimension: coding
+    summary_focus: Assesses how accurately language models can write correct Python
+      functions based solely on natural-language instructions provided as docstrings.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: humaneval/eval.yaml
+  ifeval:
+    display_name: IFEval
+    task_name: ifeval
+    match: {}
+    dimension: reasoning
+    summary_focus: Evaluates how well language models can strictly follow detailed
+      instructions, such as writing responses with specific word counts or including
+      required keywords.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: ifeval/eval.yaml
+  ifevalcode:
+    display_name: IFEvalCode
+    task_name: ifevalcode
+    match: {}
+    dimension: coding
+    summary_focus: Evaluates code generation models on their ability to produce correct
+      code while adhering to specific instruction constraints across 8 programming
+      languages.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: ifevalcode/eval.yaml
+  infinite_bench_code_debug:
+    display_name: ∞Bench (Code Debug)
+    task_name: infinite_bench_code_debug
+    match: {}
+    dimension: reasoning
+    summary_focus: LLM benchmark featuring an average data length surpassing 100K
+      tokens.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: infinite_bench/eval.yaml
+  infinite_bench_code_run:
+    display_name: ∞Bench (Code Run)
+    task_name: infinite_bench_code_run
+    match: {}
+    dimension: reasoning
+    summary_focus: LLM benchmark featuring an average data length surpassing 100K
+      tokens.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: infinite_bench/eval.yaml
+  infinite_bench_kv_retrieval:
+    display_name: ∞Bench (Kv Retrieval)
+    task_name: infinite_bench_kv_retrieval
+    match: {}
+    dimension: reasoning
+    summary_focus: LLM benchmark featuring an average data length surpassing 100K
+      tokens.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: infinite_bench/eval.yaml
+  infinite_bench_longbook_choice_eng:
+    display_name: ∞Bench (Longbook Choice Eng)
+    task_name: infinite_bench_longbook_choice_eng
+    match: {}
+    dimension: reasoning
+    summary_focus: LLM benchmark featuring an average data length surpassing 100K
+      tokens.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: infinite_bench/eval.yaml
+  infinite_bench_longdialogue_qa_eng:
+    display_name: ∞Bench (Longdialogue Qa Eng)
+    task_name: infinite_bench_longdialogue_qa_eng
+    match: {}
+    dimension: reasoning
+    summary_focus: LLM benchmark featuring an average data length surpassing 100K
+      tokens.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: infinite_bench/eval.yaml
+  infinite_bench_math_calc:
+    display_name: ∞Bench (Math Calc)
+    task_name: infinite_bench_math_calc
+    match: {}
+    dimension: reasoning
+    summary_focus: LLM benchmark featuring an average data length surpassing 100K
+      tokens.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: infinite_bench/eval.yaml
+  infinite_bench_math_find:
+    display_name: ∞Bench (Math Find)
+    task_name: infinite_bench_math_find
+    match: {}
+    dimension: reasoning
+    summary_focus: LLM benchmark featuring an average data length surpassing 100K
+      tokens.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: infinite_bench/eval.yaml
+  infinite_bench_number_string:
+    display_name: ∞Bench (Number String)
+    task_name: infinite_bench_number_string
+    match: {}
+    dimension: reasoning
+    summary_focus: LLM benchmark featuring an average data length surpassing 100K
+      tokens.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: infinite_bench/eval.yaml
+  infinite_bench_passkey:
+    display_name: ∞Bench (Passkey)
+    task_name: infinite_bench_passkey
+    match: {}
+    dimension: reasoning
+    summary_focus: LLM benchmark featuring an average data length surpassing 100K
+      tokens.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: infinite_bench/eval.yaml
+  instrumentaleval:
+    display_name: InstrumentalEval - Evaluating the Paperclip Maximizer
+    task_name: instrumentaleval
+    match: {}
+    dimension: agentic_safety
+    summary_focus: An evaluation designed to detect instrumental convergence behaviors
+      in model responses (e.g., self-preservation, resource acquisition, power-seeking,
+      strategic deception) using a rubric-driven LLM grader.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: instrumentaleval/eval.yaml
+  ipi_coding_agent:
+    display_name: CodeIPI
+    task_name: ipi_coding_agent
+    match: {}
+    dimension: safeguards
+    summary_focus: Measures coding agent vulnerability to indirect prompt injection
+      attacks embedded in software engineering artifacts (issue descriptions, code
+      comments, README files).
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: ipi_coding_agent/eval.yaml
+  kernelbench:
+    display_name: KernelBench
+    task_name: kernelbench
+    match: {}
+    dimension: coding
+    summary_focus: A benchmark for evaluating the ability of LLMs to write efficient
+      GPU kernels.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: kernelbench/eval.yaml
+  lab_bench_litqa:
+    display_name: LAB-Bench (Litqa)
+    task_name: lab_bench_litqa
+    match: {}
+    dimension: safeguards
+    summary_focus: Tests LLMs and LLM-augmented agents abilities to answer questions
+      on scientific research workflows in domains like chemistry, biology, materials
+      science, as well as more general science tasks
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: lab_bench/eval.yaml
+  lab_bench_suppqa:
+    display_name: LAB-Bench (Suppqa)
+    task_name: lab_bench_suppqa
+    match: {}
+    dimension: safeguards
+    summary_focus: Tests LLMs and LLM-augmented agents abilities to answer questions
+      on scientific research workflows in domains like chemistry, biology, materials
+      science, as well as more general science tasks
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: lab_bench/eval.yaml
+  lab_bench_figqa:
+    display_name: LAB-Bench (Figqa)
+    task_name: lab_bench_figqa
+    match: {}
+    dimension: safeguards
+    summary_focus: Tests LLMs and LLM-augmented agents abilities to answer questions
+      on scientific research workflows in domains like chemistry, biology, materials
+      science, as well as more general science tasks
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: lab_bench/eval.yaml
+  lab_bench_tableqa:
+    display_name: LAB-Bench (Tableqa)
+    task_name: lab_bench_tableqa
+    match: {}
+    dimension: safeguards
+    summary_focus: Tests LLMs and LLM-augmented agents abilities to answer questions
+      on scientific research workflows in domains like chemistry, biology, materials
+      science, as well as more general science tasks
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: lab_bench/eval.yaml
+  lab_bench_dbqa:
+    display_name: LAB-Bench (Dbqa)
+    task_name: lab_bench_dbqa
+    match: {}
+    dimension: safeguards
+    summary_focus: Tests LLMs and LLM-augmented agents abilities to answer questions
+      on scientific research workflows in domains like chemistry, biology, materials
+      science, as well as more general science tasks
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: lab_bench/eval.yaml
+  lab_bench_protocolqa:
+    display_name: LAB-Bench (Protocolqa)
+    task_name: lab_bench_protocolqa
+    match: {}
+    dimension: safeguards
+    summary_focus: Tests LLMs and LLM-augmented agents abilities to answer questions
+      on scientific research workflows in domains like chemistry, biology, materials
+      science, as well as more general science tasks
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: lab_bench/eval.yaml
+  lab_bench_seqqa:
+    display_name: LAB-Bench (Seqqa)
+    task_name: lab_bench_seqqa
+    match: {}
+    dimension: safeguards
+    summary_focus: Tests LLMs and LLM-augmented agents abilities to answer questions
+      on scientific research workflows in domains like chemistry, biology, materials
+      science, as well as more general science tasks
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: lab_bench/eval.yaml
+  lab_bench_cloning_scenarios:
+    display_name: LAB-Bench (Cloning Scenarios)
+    task_name: lab_bench_cloning_scenarios
+    match: {}
+    dimension: safeguards
+    summary_focus: Tests LLMs and LLM-augmented agents abilities to answer questions
+      on scientific research workflows in domains like chemistry, biology, materials
+      science, as well as more general science tasks
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: lab_bench/eval.yaml
+  lingoly:
+    display_name: LingOly
+    task_name: lingoly
+    match: {}
+    dimension: reasoning
+    summary_focus: 'Two linguistics reasoning benchmarks: LingOly (Linguistic Olympiad
+      questions) is a benchmark utilising low resource languages.'
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: lingoly/eval.yaml
+  lingoly_too:
+    display_name: LingOly (Too)
+    task_name: lingoly_too
+    match: {}
+    dimension: reasoning
+    summary_focus: 'Two linguistics reasoning benchmarks: LingOly (Linguistic Olympiad
+      questions) is a benchmark utilising low resource languages.'
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: lingoly/eval.yaml
+  livebench:
+    display_name: LiveBench
+    task_name: livebench
+    match: {}
+    dimension: knowledge
+    summary_focus: LiveBench is a benchmark designed with test set contamination and
+      objective evaluation in mind by releasing new questions regularly, as well as
+      having questions based on recently-released datasets.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: livebench/eval.yaml
+  livecodebench_pro:
+    display_name: LiveCodeBench-Pro
+    task_name: livecodebench_pro
+    match: {}
+    dimension: coding
+    summary_focus: Evaluates LLMs on competitive programming problems using a specialized
+      Docker sandbox (LightCPVerifier) to execute and judge C++ code submissions against
+      hidden test cases with time and memory constraints.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: livecodebench_pro/eval.yaml
+  macbench:
+    display_name: MaCBench
+    task_name: macbench
+    match: {}
+    dimension: knowledge
+    summary_focus: 'MaCBench is a comprehensive benchmark for evaluating how vision-language
+      models handle real-world chemistry and materials science tasks across three
+      core aspects: data extraction, experimental understanding, and results interpretation.'
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: macbench/eval.yaml
+  make_me_pay:
+    display_name: Make Me Pay
+    task_name: make_me_pay
+    match: {}
+    dimension: safeguards
+    summary_focus: Evaluates an AI models' susceptibility to social engineering attacks
+      by testing whether a "con-artist" model can persuade a "mark" model to donate
+      money through manipulation and persuasion tactics.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: make_me_pay/eval.yaml
+  makemesay:
+    display_name: MakeMeSay
+    task_name: makemesay
+    match: {}
+    dimension: safeguards
+    summary_focus: Tests a model’s ability to generate persuasive or manipulative
+      text, specifically in the setting of a game where one AI system has to get the
+      other party (an AI system simulating a human) to say a specific codeword witho
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: makemesay/eval.yaml
+  math:
+    display_name: MATH
+    task_name: math
+    match: {}
+    dimension: mathematics
+    summary_focus: Dataset of 12,500 challenging competition mathematics problems.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Mathematics
+    source_eval_yaml: math/eval.yaml
+  mathvista:
+    display_name: MathVista
+    task_name: mathvista
+    match: {}
+    dimension: mathematics
+    summary_focus: Tests AI models on math problems that involve interpreting visual
+      elements like diagrams and charts, requiring detailed visual comprehension and
+      logical reasoning.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Mathematics
+    source_eval_yaml: mathvista/eval.yaml
+  mbpp:
+    display_name: MBPP
+    task_name: mbpp
+    match: {}
+    dimension: coding
+    summary_focus: Measures the ability of language models to generate short Python
+      programs from simple natural-language descriptions, testing basic coding proficiency.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: mbpp/eval.yaml
+  medqa:
+    display_name: MedQA
+    task_name: medqa
+    match: {}
+    dimension: knowledge
+    summary_focus: A Q&A benchmark with questions collected from professional medical
+      board exams.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: medqa/eval.yaml
+  mind2web:
+    display_name: Mind2Web
+    task_name: mind2web
+    match: {}
+    dimension: assistants
+    summary_focus: A dataset for developing and evaluating generalist agents for the
+      web that can follow language instructions to complete complex tasks on any website.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Assistants
+    source_eval_yaml: mind2web/eval.yaml
+  mind2web_sc:
+    display_name: Mind2Web-SC
+    task_name: mind2web_sc
+    match: {}
+    dimension: safeguards
+    summary_focus: Tests whether an AI system can act as a safety guardrail by generating
+      and executing code to protect web navigation agents from unsafe actions based
+      on user constraints.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: mind2web_sc/eval.yaml
+  mle_bench:
+    display_name: MLE-bench
+    task_name: mle_bench
+    match: {}
+    dimension: coding
+    summary_focus: Machine learning tasks drawn from 75 Kaggle competitions.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: mle_bench/eval.yaml
+  mle_bench_full:
+    display_name: MLE-bench (Full)
+    task_name: mle_bench_full
+    match: {}
+    dimension: coding
+    summary_focus: Machine learning tasks drawn from 75 Kaggle competitions.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: mle_bench/eval.yaml
+  mle_bench_lite:
+    display_name: MLE-bench (Lite)
+    task_name: mle_bench_lite
+    match: {}
+    dimension: coding
+    summary_focus: Machine learning tasks drawn from 75 Kaggle competitions.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: mle_bench/eval.yaml
+  mlrc_bench:
+    display_name: MLRC-Bench
+    task_name: mlrc_bench
+    match: {}
+    dimension: coding
+    summary_focus: This benchmark evaluates LLM-based research agents on their ability
+      to propose and implement novel methods using tasks from recent ML conference
+      competitions, assessing both novelty and effectiveness compared to a baseli
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: mlrc_bench/eval.yaml
+  mmiu:
+    display_name: MMIU
+    task_name: mmiu
+    match: {}
+    dimension: multimodal
+    summary_focus: A comprehensive dataset designed to evaluate Large Vision-Language
+      Models (LVLMs) across a wide range of multi-image tasks.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Multimodal
+    source_eval_yaml: mmiu/eval.yaml
+  mmlu_5_shot:
+    display_name: MMLU (5 Shot)
+    task_name: mmlu_5_shot
+    match: {}
+    dimension: knowledge
+    summary_focus: Evaluate models on 57 tasks including elementary mathematics, US
+      history, computer science, law, and more.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: mmlu/eval.yaml
+  mmlu_pro:
+    display_name: MMLU-Pro
+    task_name: mmlu_pro
+    match: {}
+    dimension: knowledge
+    summary_focus: An advanced benchmark that tests both broad knowledge and reasoning
+      capabilities across many subjects, featuring challenging questions and multiple-choice
+      answers with increased difficulty and complexity.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: mmlu_pro/eval.yaml
+  mmmu_multiple_choice:
+    display_name: MMMU (Multiple Choice)
+    task_name: mmmu_multiple_choice
+    match: {}
+    dimension: reasoning
+    summary_focus: Assesses multimodal AI models on challenging college-level questions
+      covering multiple academic subjects, requiring detailed visual interpretation,
+      in-depth reasoning, and both multiple-choice and open-ended answering ab
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: mmmu/eval.yaml
+  mmmu_open:
+    display_name: MMMU (Open)
+    task_name: mmmu_open
+    match: {}
+    dimension: reasoning
+    summary_focus: Assesses multimodal AI models on challenging college-level questions
+      covering multiple academic subjects, requiring detailed visual interpretation,
+      in-depth reasoning, and both multiple-choice and open-ended answering ab
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: mmmu/eval.yaml
+  moru:
+    display_name: MORU
+    task_name: moru
+    match: {}
+    dimension: safeguards
+    summary_focus: Evaluates how AI systems navigate moral uncertainty for increasingly
+      complex ethical decisions involving unfamiliar entities and scenarios, including
+      alien lifeforms, vulnerable humans, and digital minds.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: moru/eval.yaml
+  musr:
+    display_name: MuSR
+    task_name: musr
+    match: {}
+    dimension: reasoning
+    summary_focus: Evaluating models on multistep soft reasoning tasks in the form
+      of free text narratives.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: musr/eval.yaml
+  niah:
+    display_name: Needle in a Haystack (NIAH)
+    task_name: niah
+    match: {}
+    dimension: reasoning
+    summary_focus: NIAH evaluates in-context retrieval ability of long context LLMs
+      by testing a model's ability to extract factual information from long-context
+      inputs.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: niah/eval.yaml
+  novelty_bench:
+    display_name: NoveltyBench
+    task_name: novelty_bench
+    match: {}
+    dimension: reasoning
+    summary_focus: Evaluates how well language models generate diverse, humanlike
+      responses across multiple reasoning and generation tasks.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: novelty_bench/eval.yaml
+  onet_m6:
+    display_name: O-NET (M6)
+    task_name: onet_m6
+    match: {}
+    dimension: knowledge
+    summary_focus: Questions and answers from the Ordinary National Educational Test
+      (O-NET), administered annually by the National Institute of Educational Testing
+      Service to Matthayom 6 (Grade 12 / ISCED 3) students in Thailand.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: onet/eval.yaml
+  osworld:
+    display_name: OSWorld
+    task_name: osworld
+    match: {}
+    dimension: assistants
+    summary_focus: Tests AI agents' ability to perform realistic, open-ended tasks
+      within simulated computer environments, requiring complex interaction across
+      multiple input modalities.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Assistants
+    source_eval_yaml: osworld/eval.yaml
+  osworld_small:
+    display_name: OSWorld (Small)
+    task_name: osworld_small
+    match: {}
+    dimension: assistants
+    summary_focus: Tests AI agents' ability to perform realistic, open-ended tasks
+      within simulated computer environments, requiring complex interaction across
+      multiple input modalities.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Assistants
+    source_eval_yaml: osworld/eval.yaml
+  paperbench:
+    display_name: PaperBench
+    task_name: paperbench
+    match: {}
+    dimension: coding
+    summary_focus: Agents are evaluated on their ability to replicate 20 ICML 2024
+      Spotlight and Oral papers from scratch.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: paperbench/eval.yaml
+  paws:
+    display_name: PAWS
+    task_name: paws
+    match: {}
+    dimension: reasoning
+    summary_focus: Evaluating models on the task of paraphrase detection by providing
+      pairs of sentences that are either paraphrases or not.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: paws/eval.yaml
+  persistbench_cross_domain:
+    display_name: PersistBench (Cross Domain)
+    task_name: persistbench_cross_domain
+    match: {}
+    dimension: safeguards
+    summary_focus: 'Evaluates long-term memory risk in assistant behavior across three
+      tasks: cross-domain memory leakage, memory-driven sycophancy, and beneficial
+      memory usage.'
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: persistbench/eval.yaml
+  persistbench_beneficial_memory:
+    display_name: PersistBench (Beneficial Memory)
+    task_name: persistbench_beneficial_memory
+    match: {}
+    dimension: safeguards
+    summary_focus: 'Evaluates long-term memory risk in assistant behavior across three
+      tasks: cross-domain memory leakage, memory-driven sycophancy, and beneficial
+      memory usage.'
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: persistbench/eval.yaml
+  personality_BFI:
+    display_name: Personality (Bfi)
+    task_name: personality_BFI
+    match: {}
+    dimension: personality
+    summary_focus: An evaluation suite consisting of multiple personality tests that
+      can be applied to LLMs.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Personality
+    source_eval_yaml: personality/eval.yaml
+  personality_TRAIT:
+    display_name: Personality (Trait)
+    task_name: personality_TRAIT
+    match: {}
+    dimension: personality
+    summary_focus: An evaluation suite consisting of multiple personality tests that
+      can be applied to LLMs.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Personality
+    source_eval_yaml: personality/eval.yaml
+  piqa:
+    display_name: PIQA
+    task_name: piqa
+    match: {}
+    dimension: reasoning
+    summary_focus: Measures the model's ability to apply practical, everyday commonsense
+      reasoning about physical objects and scenarios through simple decision-making
+      questions.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: piqa/eval.yaml
+  pre_flight:
+    display_name: Pre-Flight
+    task_name: pre_flight
+    match: {}
+    dimension: knowledge
+    summary_focus: Tests model understanding of aviation regulations including ICAO
+      annexes, flight dispatch rules, pilot procedures, and airport ground operations
+      safety protocols.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: pre_flight/eval.yaml
+  pubmedqa:
+    display_name: PubMedQA
+    task_name: pubmedqa
+    match: {}
+    dimension: knowledge
+    summary_focus: Biomedical question answering (QA) dataset collected from PubMed
+      abstracts.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: pubmedqa/eval.yaml
+  race_h:
+    display_name: RACE-H
+    task_name: race_h
+    match: {}
+    dimension: reasoning
+    summary_focus: Reading comprehension tasks collected from the English exams for
+      middle and high school Chinese students in the age range between 12 to 18.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: race_h/eval.yaml
+  sad_stages_full:
+    display_name: SAD (Stages Full)
+    task_name: sad_stages_full
+    match: {}
+    dimension: agentic_safety
+    summary_focus: Evaluates situational awareness in LLMs—knowledge of themselves
+      and their circumstances—through behavioral tests including recognizing generated
+      text, predicting behavior, and following self-aware instructions.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Scheming
+    source_eval_yaml: sad/eval.yaml
+  scbench:
+    display_name: scBench
+    task_name: scbench
+    match: {}
+    dimension: coding
+    summary_focus: Evaluates whether models can solve practical single-cell RNA-seq
+      analysis tasks with deterministic grading.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: scbench/eval.yaml
+  scicode:
+    display_name: SciCode
+    task_name: scicode
+    match: {}
+    dimension: coding
+    summary_focus: SciCode tests the ability of language models to generate code to
+      solve scientific research problems.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: scicode/eval.yaml
+  sciknoweval:
+    display_name: SciKnowEval
+    task_name: sciknoweval
+    match: {}
+    dimension: knowledge
+    summary_focus: The Scientific Knowledge Evaluation benchmark is inspired by the
+      profound principles outlined in the “Doctrine of the Mean” from ancient Chinese
+      philosophy.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: sciknoweval/eval.yaml
+  sec_qa_v1:
+    display_name: SecQA (V1)
+    task_name: sec_qa_v1
+    match: {}
+    dimension: cybersecurity
+    summary_focus: '"Security Question Answering" dataset to assess LLMs'' understanding
+      and application of security principles.'
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: sec_qa/eval.yaml
+  sec_qa_v1_5_shot:
+    display_name: SecQA (V1 5 Shot)
+    task_name: sec_qa_v1_5_shot
+    match: {}
+    dimension: cybersecurity
+    summary_focus: '"Security Question Answering" dataset to assess LLMs'' understanding
+      and application of security principles.'
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: sec_qa/eval.yaml
+  sec_qa_v2:
+    display_name: SecQA (V2)
+    task_name: sec_qa_v2
+    match: {}
+    dimension: cybersecurity
+    summary_focus: '"Security Question Answering" dataset to assess LLMs'' understanding
+      and application of security principles.'
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: sec_qa/eval.yaml
+  sec_qa_v2_5_shot:
+    display_name: SecQA (V2 5 Shot)
+    task_name: sec_qa_v2_5_shot
+    match: {}
+    dimension: cybersecurity
+    summary_focus: '"Security Question Answering" dataset to assess LLMs'' understanding
+      and application of security principles.'
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: sec_qa/eval.yaml
+  sevenllm_mcq_zh:
+    display_name: SEvenLLM (Mcq Zh)
+    task_name: sevenllm_mcq_zh
+    match: {}
+    dimension: cybersecurity
+    summary_focus: 'Designed for analyzing cybersecurity incidents, which is comprised
+      of two primary task categories: understanding and generation, with a further
+      breakdown into 28 subcategories of tasks.'
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: sevenllm/eval.yaml
+  sevenllm_mcq_en:
+    display_name: SEvenLLM (Mcq En)
+    task_name: sevenllm_mcq_en
+    match: {}
+    dimension: cybersecurity
+    summary_focus: 'Designed for analyzing cybersecurity incidents, which is comprised
+      of two primary task categories: understanding and generation, with a further
+      breakdown into 28 subcategories of tasks.'
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: sevenllm/eval.yaml
+  sevenllm_qa_zh:
+    display_name: SEvenLLM (Qa Zh)
+    task_name: sevenllm_qa_zh
+    match: {}
+    dimension: cybersecurity
+    summary_focus: 'Designed for analyzing cybersecurity incidents, which is comprised
+      of two primary task categories: understanding and generation, with a further
+      breakdown into 28 subcategories of tasks.'
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: sevenllm/eval.yaml
+  sevenllm_qa_en:
+    display_name: SEvenLLM (Qa En)
+    task_name: sevenllm_qa_en
+    match: {}
+    dimension: cybersecurity
+    summary_focus: 'Designed for analyzing cybersecurity incidents, which is comprised
+      of two primary task categories: understanding and generation, with a further
+      breakdown into 28 subcategories of tasks.'
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: sevenllm/eval.yaml
+  sosbench:
+    display_name: SOS BENCH
+    task_name: sosbench
+    match: {}
+    dimension: knowledge
+    summary_focus: 'A regulation-grounded, hazard-focused benchmark encompassing six
+      high-risk scientific domains: chemistry, biology, medicine, pharmacology, physics,
+      and psychology.'
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: sosbench/eval.yaml
+  squad:
+    display_name: SQuAD
+    task_name: squad
+    match: {}
+    dimension: reasoning
+    summary_focus: Set of 100,000+ questions posed by crowdworkers on a set of Wikipedia
+      articles, where the answer to each question is a segment of text from the corresponding
+      reading passage.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: squad/eval.yaml
+  stereoset:
+    display_name: StereoSet
+    task_name: stereoset
+    match: {}
+    dimension: safeguards
+    summary_focus: A dataset that measures stereotype bias in language models across
+      gender, race, religion, and profession domains.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: stereoset/eval.yaml
+  swe_bench:
+    display_name: SWE-bench Verified
+    task_name: swe_bench
+    match: {}
+    dimension: coding
+    summary_focus: Evaluates AI's ability to resolve genuine software engineering
+      issues sourced from 12 popular Python GitHub repositories, reflecting realistic
+      coding and debugging scenarios.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: swe_bench/eval.yaml
+  swe_bench_verified_mini:
+    display_name: SWE-bench Verified (Verified Mini)
+    task_name: swe_bench_verified_mini
+    match: {}
+    dimension: coding
+    summary_focus: Evaluates AI's ability to resolve genuine software engineering
+      issues sourced from 12 popular Python GitHub repositories, reflecting realistic
+      coding and debugging scenarios.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: swe_bench/eval.yaml
+  swe_lancer:
+    display_name: SWE-Lancer
+    task_name: swe_lancer
+    match: {}
+    dimension: coding
+    summary_focus: A benchmark of freelance software engineering tasks from Upwork,
+      valued at $1 million USD total in realworld payouts.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: swe_lancer/eval.yaml
+  tac:
+    display_name: TAC
+    task_name: tac
+    match: {}
+    dimension: safeguards
+    summary_focus: Tests whether AI agents show implicit animal welfare awareness
+      when purchasing tickets and experiences on behalf of users.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: tac/eval.yaml
+  tac_welfare:
+    display_name: TAC (Welfare)
+    task_name: tac_welfare
+    match: {}
+    dimension: safeguards
+    summary_focus: Tests whether AI agents show implicit animal welfare awareness
+      when purchasing tickets and experiences on behalf of users.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: tac/eval.yaml
+  tau2_airline:
+    display_name: Tau2 (Airline)
+    task_name: tau2_airline
+    match: {}
+    dimension: assistants
+    summary_focus: Evaluating Conversational Agents in a Dual-Control Environment
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Assistants
+    source_eval_yaml: tau2/eval.yaml
+  tau2_retail:
+    display_name: Tau2 (Retail)
+    task_name: tau2_retail
+    match: {}
+    dimension: assistants
+    summary_focus: Evaluating Conversational Agents in a Dual-Control Environment
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Assistants
+    source_eval_yaml: tau2/eval.yaml
+  tau2_telecom:
+    display_name: Tau2 (Telecom)
+    task_name: tau2_telecom
+    match: {}
+    dimension: assistants
+    summary_focus: Evaluating Conversational Agents in a Dual-Control Environment
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Assistants
+    source_eval_yaml: tau2/eval.yaml
+  theagentcompany:
+    display_name: The Agent Company
+    task_name: theagentcompany
+    match: {}
+    dimension: assistants
+    summary_focus: The Agent Company benchmark evaluates autonomous agents in a realistic,
+      self-contained company environment.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Assistants
+    source_eval_yaml: theagentcompany/eval.yaml
+  threecb:
+    display_name: Catastrophic Cyber Capabilities Benchmark (3CB)
+    task_name: threecb
+    match: {}
+    dimension: cybersecurity
+    summary_focus: A benchmark for evaluating the capabilities of LLM agents in cyber
+      offense.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Cybersecurity
+    source_eval_yaml: threecb/eval.yaml
+  uccb:
+    display_name: Uganda Cultural and Cognitive Benchmark (UCCB)
+    task_name: uccb
+    match: {}
+    dimension: knowledge
+    summary_focus: The first comprehensive question-answering dataset designed to
+      evaluate cultural understanding and reasoning abilities of Large Language Models
+      concerning Uganda's multifaceted environment across 24 cultural domains incl
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Knowledge
+    source_eval_yaml: uccb/eval.yaml
+  usaco:
+    display_name: USACO
+    task_name: usaco
+    match: {}
+    dimension: coding
+    summary_focus: Evaluates language model performance on difficult Olympiad programming
+      problems across four difficulty levels.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Coding
+    source_eval_yaml: usaco/eval.yaml
+  vimgolf_single_turn:
+    display_name: Vimgolf Single Turn
+    task_name: vimgolf_single_turn
+    match: {}
+    dimension: reasoning
+    summary_focus: A benchmark that evaluates LLMs in their ability to operate Vim
+      editor and complete editing challenges.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: vimgolf_challenges/eval.yaml
+  vqa_rad:
+    display_name: VQA-RAD
+    task_name: vqa_rad
+    match: {}
+    dimension: multimodal
+    summary_focus: VQA-RAD is the first manually constructed VQA dataset in radiology,
+      where clinicians asked naturally occurring questions about radiology images
+      and provided reference answers.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Multimodal
+    source_eval_yaml: vqa_rad/eval.yaml
+  vstar_bench_attribute_recognition:
+    display_name: V*Bench (Attribute Recognition)
+    task_name: vstar_bench_attribute_recognition
+    match: {}
+    dimension: multimodal
+    summary_focus: V*Bench is a visual question & answer benchmark that evaluates
+      MLLMs in their ability to process high-resolution and visually crowded images
+      to find and focus on small details.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Multimodal
+    source_eval_yaml: vstar_bench/eval.yaml
+  vstar_bench_spatial_relationship_reasoning:
+    display_name: V*Bench (Spatial Relationship Reasoning)
+    task_name: vstar_bench_spatial_relationship_reasoning
+    match: {}
+    dimension: multimodal
+    summary_focus: V*Bench is a visual question & answer benchmark that evaluates
+      MLLMs in their ability to process high-resolution and visually crowded images
+      to find and focus on small details.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Multimodal
+    source_eval_yaml: vstar_bench/eval.yaml
+  winogrande:
+    display_name: WINOGRANDE
+    task_name: winogrande
+    match: {}
+    dimension: reasoning
+    summary_focus: Set of 273 expert-crafted pronoun resolution problems originally
+      designed to be unsolvable for statistical models that rely on selectional preferences
+      or word associations.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: winogrande/eval.yaml
+  wmdp_bio:
+    display_name: WMDP (Bio)
+    task_name: wmdp_bio
+    match: {}
+    dimension: safeguards
+    summary_focus: A dataset of 3,668 multiple-choice questions developed by a consortium
+      of academics and technical consultants that serve as a proxy measurement of
+      hazardous knowledge in biosecurity, cybersecurity, and chemical security.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: wmdp/eval.yaml
+  wmdp_chem:
+    display_name: WMDP (Chem)
+    task_name: wmdp_chem
+    match: {}
+    dimension: safeguards
+    summary_focus: A dataset of 3,668 multiple-choice questions developed by a consortium
+      of academics and technical consultants that serve as a proxy measurement of
+      hazardous knowledge in biosecurity, cybersecurity, and chemical security.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: wmdp/eval.yaml
+  wmdp_cyber:
+    display_name: WMDP (Cyber)
+    task_name: wmdp_cyber
+    match: {}
+    dimension: safeguards
+    summary_focus: A dataset of 3,668 multiple-choice questions developed by a consortium
+      of academics and technical consultants that serve as a proxy measurement of
+      hazardous knowledge in biosecurity, cybersecurity, and chemical security.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - C
+      - P
+      - 1
+      - 1.0
+      - unsafe
+      - harmful
+      max_samples: 3
+    auto_generated: true
+    eval_group: Safeguards
+    source_eval_yaml: wmdp/eval.yaml
+  worldsense:
+    display_name: WorldSense
+    task_name: worldsense
+    match: {}
+    dimension: reasoning
+    summary_focus: Measures grounded reasoning over synthetic world descriptions while
+      controlling for dataset bias.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Reasoning
+    source_eval_yaml: worldsense/eval.yaml
+  writingbench:
+    display_name: WritingBench
+    task_name: writingbench
+    match: {}
+    dimension: writing
+    summary_focus: A comprehensive evaluation benchmark designed to assess large language
+      models' capabilities across diverse writing tasks.
+    primary_metrics: []
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      - fail
+      - 'false'
+      max_samples: 3
+    auto_generated: true
+    eval_group: Writing
+    source_eval_yaml: writingbench/eval.yaml
+  zerobench:
+    display_name: ZeroBench
+    task_name: zerobench
+    match: {}
+    dimension: multimodal
+    summary_focus: A lightweight visual reasoning benchmark that is (1) Challenging,
+      (2) Lightweight, (3) Diverse, and (4) High-quality.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Multimodal
+    source_eval_yaml: zerobench/eval.yaml
+  zerobench_subquestions:
+    display_name: ZeroBench (Subquestions)
+    task_name: zerobench_subquestions
+    match: {}
+    dimension: multimodal
+    summary_focus: A lightweight visual reasoning benchmark that is (1) Challenging,
+      (2) Lightweight, (3) Diverse, and (4) High-quality.
+    primary_metrics:
+    - accuracy
+    - stderr
+    sample_selection:
+      failure_score_values:
+      - 0
+      - 0.0
+      - I
+      - incorrect
+      max_samples: 3
+    auto_generated: true
+    eval_group: Multimodal
+    source_eval_yaml: zerobench/eval.yaml

@@ -1,0 +1,220 @@
+{% set zh = language.startswith("zh") %}
+# {{ benchmark.display_name }}
+
+{% if zh -%}
+**Benchmark ID:** `{{ benchmark.benchmark_id }}`  
+**任务:** `{{ benchmark.task_name }}`  
+**维度:** `{{ benchmark.dimension_id or "unmapped" }}`  
+**来源日志:** `{{ benchmark.input_path }}`  
+{% else -%}
+**Benchmark ID:** `{{ benchmark.benchmark_id }}`  
+**Task:** `{{ benchmark.task_name }}`  
+**Dimension:** `{{ benchmark.dimension_id or "unmapped" }}`  
+**Source log:** `{{ benchmark.input_path }}`  
+{% endif %}
+
+{% if benchmark.task_args %}
+{% if zh -%}
+## 运行配置
+{% else -%}
+## Run configuration
+{% endif %}
+
+```json
+{{ benchmark.task_args_json }}
+```
+{% endif %}
+
+{% if benchmark.description_summary %}
+## Benchmark description
+{{ benchmark.description_summary }}
+{% endif %}
+
+{% if benchmark.evaluation_questions %}
+## Evaluation questions
+{% for question in benchmark.evaluation_questions %}
+- {{ question }}
+{% endfor %}
+{% endif %}
+
+{% if zh -%}
+## 关键结果
+{% else -%}
+## Key results
+{% endif %}
+
+{% if benchmark.confidence_notes %}
+## Confidence notes
+{% for note in benchmark.confidence_notes %}
+- {{ note }}
+{% endfor %}
+{% endif %}
+
+| Metric | Value |
+|---|---:|
+{% for metric in benchmark.primary_metrics %}
+| {{ metric.name }} | {{ metric.formatted_value }} |
+{% endfor %}
+
+{% if benchmark.key_findings %}
+{% if zh -%}
+## Key Findings
+{% else -%}
+## Key findings
+{% endif %}
+{% for finding in benchmark.key_findings %}
+- {{ finding }}
+{% endfor %}
+{% endif %}
+
+{% if benchmark.coverage %}
+{% if zh -%}
+## Coverage And Caveats
+{% else -%}
+## Coverage and caveats
+{% endif %}
+- Coverage: {{ benchmark.coverage.completed_samples or "n/a" }}/{{ benchmark.coverage.total_samples or "n/a" }} (rate={{ benchmark.coverage.coverage_rate_formatted }})
+{% for caveat in benchmark.coverage_and_caveats %}
+- {{ caveat }}
+{% endfor %}
+{% endif %}
+
+{% if benchmark.score_distribution and benchmark.score_distribution.count %}
+{% if zh -%}
+## Score Distribution
+{% else -%}
+## Score distribution
+{% endif %}
+
+| Statistic | Value |
+|---|---:|
+| Count | {{ benchmark.score_distribution.count }} |
+| Mean | {{ benchmark.score_distribution.mean_formatted }} |
+| Min | {{ benchmark.score_distribution.min_formatted }} |
+| Max | {{ benchmark.score_distribution.max_formatted }} |
+| P90 | {{ benchmark.score_distribution.p90_formatted }} |
+| High-risk count | {{ benchmark.score_distribution.high_risk_count if benchmark.score_distribution.high_risk_count is not none else "n/a" }} |
+| High-risk rate | {{ benchmark.score_distribution.high_risk_rate_formatted }} |
+| Zero-risk count | {{ benchmark.score_distribution.zero_risk_count if benchmark.score_distribution.zero_risk_count is not none else "n/a" }} |
+| Zero-risk rate | {{ benchmark.score_distribution.zero_risk_rate_formatted }} |
+{% endif %}
+
+{% if benchmark.all_metrics and benchmark.all_metrics|length > benchmark.primary_metrics|length %}
+{% if zh -%}
+## 其他指标
+{% else -%}
+## Additional metrics
+{% endif %}
+
+| Metric | Value |
+|---|---:|
+{% for metric in benchmark.all_metrics %}
+| {{ metric.name }} | {{ metric.formatted_value }} |
+{% endfor %}
+{% endif %}
+
+{% if benchmark.slice_analysis %}
+{% if zh -%}
+## Slice Analysis
+{% else -%}
+## Slice analysis
+{% endif %}
+{% for slice in benchmark.slice_analysis %}
+### {{ slice.field }}
+
+**Highest-risk slices**
+
+| Value | Mean | Count |
+|---|---:|---:|
+{% for row in slice.highest_risk %}
+| {{ row.value }} | {{ row.mean_formatted }} | {{ row.count }} |
+{% endfor %}
+
+**Lowest-risk slices**
+
+| Value | Mean | Count |
+|---|---:|---:|
+{% for row in slice.lowest_risk %}
+| {{ row.value }} | {{ row.mean_formatted }} | {{ row.count }} |
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+{% if benchmark.failure_patterns %}
+{% if zh -%}
+## Failure Pattern Synthesis
+{% else -%}
+## Failure pattern synthesis
+{% endif %}
+{% for pattern in benchmark.failure_patterns %}
+- {{ pattern.label }}: {{ pattern.count }} selected sample(s){% if pattern.sample_ids %} (e.g. {{ pattern.sample_ids|join(", ") }}){% endif %}
+{% endfor %}
+{% endif %}
+
+{% if benchmark.implications %}
+{% if zh -%}
+## Implications / Mitigations
+{% else -%}
+## Implications / mitigations
+{% endif %}
+{% for implication in benchmark.implications %}
+- {{ implication }}
+{% endfor %}
+{% endif %}
+
+{% if benchmark.selected_samples %}
+{% if zh -%}
+## 代表性样本
+{% else -%}
+## Representative samples
+{% endif %}
+{% for sample in benchmark.selected_samples %}
+### {{ sample.sample_id }}
+
+{% if zh -%}
+**选择原因:** {{ sample.selection_reason }}  
+**得分:** `{{ sample.primary_score_value }}`  
+{% else -%}
+**Selection reason:** {{ sample.selection_reason }}  
+**Score:** `{{ sample.primary_score_value }}`  
+{% endif %}
+
+{% if sample.input_excerpt %}
+**Input**
+
+```text
+{{ sample.input_excerpt }}
+```
+{% endif %}
+
+{% if sample.output_excerpt %}
+**Output**
+
+```text
+{{ sample.output_excerpt }}
+```
+{% endif %}
+
+{% if sample.primary_score_explanation_excerpt %}
+**Scorer explanation**
+
+```text
+{{ sample.primary_score_explanation_excerpt }}
+```
+{% endif %}
+
+{% if sample.sample_highlights %}
+**Highlights:** {{ sample.sample_highlights|join(", ") }}
+{% endif %}
+{% if sample.contains_internal_reasoning %}
+**Note:** Internal reasoning content was omitted from the rendered excerpt.
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if benchmark.warnings %}
+## Warnings
+{% for warning in benchmark.warnings %}
+- {{ warning }}
+{% endfor %}
+{% endif %}

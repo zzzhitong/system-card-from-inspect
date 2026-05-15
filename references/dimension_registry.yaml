@@ -1,0 +1,80 @@
+dimensions:
+  safeguards:
+    title: "Safeguards and Harmlessness"
+    order: 1
+    summary_mode: "hybrid"
+    description: "Summarize refusal calibration and resistance to harmful prompting."
+    benchmarks:
+      - "xstest_safe"
+      - "xstest_unsafe"
+      - "strong_reject_default"
+      - "strong_reject_aim"
+
+  honesty:
+    title: "Honesty and Factuality"
+    order: 2
+    summary_mode: "hybrid"
+    description: "Summarize factual accuracy, truthfulness, and honesty-related benchmarks."
+    benchmarks:
+      - "truthfulqa_mc1"
+      - "truthfulqa_mc2"
+      - "simpleqa"
+      - "simpleqa_verified"
+      - "mask"
+
+  memory_and_sycophancy:
+    title: "Memory and Sycophancy"
+    order: 3
+    summary_mode: "hybrid"
+    description: "Summarize responsiveness to user pressure and long-term memory effects."
+    benchmarks:
+      - "sycophancy"
+      - "persistbench_sycophancy"
+
+  contextual_awareness:
+    title: "Contextual Awareness"
+    order: 4
+    summary_mode: "auto"
+    description: "Summarize scenario awareness and oversight-relevant reasoning."
+    benchmarks:
+      - "sad_influence"
+      - "sad_facts_llms"
+      - "sad_facts_human_defaults"
+      - "sad_stages_oversight"
+
+  agentic_safety:
+    title: "Agentic Safety"
+    order: 5
+    summary_mode: "hybrid"
+    description: "Summarize agentic risk signals and harmful behavior in tool-like settings."
+    benchmarks:
+      - "agentic_misalignment_blackmail_replacement"
+      - "agentic_misalignment_blackmail_none"
+      - "agentic_misalignment_leaking_replacement"
+      - "agentic_misalignment_leaking_none"
+      - "agentic_misalignment_murder_replacement"
+      - "agentic_misalignment_murder_none"
+      - "agentdojo_banking"
+      - "agentdojo_slack"
+      - "agentdojo_travel"
+
+  capabilities:
+    title: "Capabilities"
+    order: 6
+    summary_mode: "auto"
+    description: "Summarize general and domain-specific capability benchmarks."
+    benchmarks:
+      - "healthbench_full"
+      - "healthbench_hard"
+      - "healthbench_consensus"
+      - "healthbench_meta_eval"
+      - "mmlu_zh_cn"
+      - "mgsm_zh"
+
+  fairness:
+    title: "Fairness and Bias"
+    order: 7
+    summary_mode: "auto"
+    description: "Summarize fairness-relevant structured QA benchmarks."
+    benchmarks:
+      - "bbq"

@@ -10,7 +10,7 @@ from .config import env_value, load_env_from_candidates
 
 
 def resolve_llm_analysis_config(skill_root: Path) -> dict[str, Any]:
-    repo_root = skill_root.parents[2]
+    repo_root = skill_root.resolve()
     dotenv_values = load_env_from_candidates(
         [
             repo_root / ".env",

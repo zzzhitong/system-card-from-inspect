@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+.env
+.DS_Store
+references/runtime_config.local.json
+system_card_artifacts/
+tmp_artifacts/
+_smoke_artifacts/
+_smoke_artifacts_small/
+_suggestion_smoke/

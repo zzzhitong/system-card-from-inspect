@@ -1,15 +1,17 @@
 ---
 name: system-card-from-inspect
-description: Generate reviewable benchmark-level, dimension-level, and top-level system-card artifacts from Inspect eval logs. Use when Codex needs to parse Inspect `.eval` logs or exported log JSON, build benchmark facts and benchmark descriptions, run benchmark/dimension/system-card analysis, group benchmarks into system-card dimensions, support incremental benchmark ingestion, and render final English and Chinese markdown outputs before any LaTeX or PDF conversion.
+description: Use this skill when generating reviewable system-card markdown artifacts from Inspect `.eval` logs or exported Inspect JSON logs.
 ---
 
 # System Card from Inspect
 
 Use this skill to build the `logs -> benchmark facts -> benchmark analysis -> dimension facts -> system card facts -> markdown` portion of a system-card workflow.
 
+All paths in this file are relative to the **repository root / skill root**.
+
 ## Primary workflow
 
-1. Prefer exported Inspect JSON logs when available, especially curated directories such as `inspect_evals/logs_json_final/`.
+1. Prefer exported Inspect JSON logs when available, especially curated final-log directories.
 2. Support `.eval` archives as input when `inspect_ai` is available locally.
 3. Resolve Python, working directory, `.env` files, and extra environment variables from runtime config before launching the pipeline.
 4. Normalize selected runs into reviewable intermediate artifacts:
@@ -105,19 +107,19 @@ artifacts/
 Use the runtime config and the cross-platform Python launcher when possible:
 
 ```bash
-python .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py --print-runtime
+python scripts/run_with_runtime.py --print-runtime
 ```
 
 If your machine exposes Python as `python3`, use:
 
 ```bash
-python3 .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py --print-runtime
+python3 scripts/run_with_runtime.py --print-runtime
 ```
 
 By default, the launcher searches for:
 
-1. `.codex/skills/system-card-from-inspect/references/runtime_config.local.json`
-2. `.codex/skills/system-card-from-inspect/references/runtime_config.json`
+1. `references/runtime_config.local.json`
+2. `references/runtime_config.json`
 
 The shared default config resolves Python from these candidates, in order:
 
@@ -165,10 +167,10 @@ If you need to pin an exact interpreter for one machine, add `python_path` in `r
 Run the full pipeline on a directory of JSON logs:
 
 ```bash
-python .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py run \
-  --input-dir inspect_evals/logs_json_final \
-  --benchmark-registry .codex/skills/system-card-from-inspect/references/benchmark_registry.yaml \
-  --dimension-registry .codex/skills/system-card-from-inspect/references/dimension_registry.yaml \
+python scripts/run_with_runtime.py run \
+  --input-dir path/to/logs_json_final \
+  --benchmark-registry references/benchmark_registry.yaml \
+  --dimension-registry references/dimension_registry.yaml \
   --analysis-mode auto \
   --artifacts-dir system_card_artifacts
 ```
@@ -176,10 +178,10 @@ python .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py run \
 Run the full pipeline on a single `.eval` log:
 
 ```bash
-python .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py run \
+python scripts/run_with_runtime.py run \
   --input-path path/to/benchmark.eval \
-  --benchmark-registry .codex/skills/system-card-from-inspect/references/benchmark_registry.yaml \
-  --dimension-registry .codex/skills/system-card-from-inspect/references/dimension_registry.yaml \
+  --benchmark-registry references/benchmark_registry.yaml \
+  --dimension-registry references/dimension_registry.yaml \
   --analysis-mode auto \
   --artifacts-dir system_card_artifacts
 ```
@@ -187,12 +189,12 @@ python .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py run \
 Render from an explicit report manifest:
 
 ```bash
-python .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py run \
-  --input-dir inspect_evals/logs_json_final \
-  --report-manifest .codex/skills/system-card-from-inspect/references/report_manifest.example.yaml \
-  --benchmark-registry .codex/skills/system-card-from-inspect/references/benchmark_registry.yaml \
-  --dimension-registry .codex/skills/system-card-from-inspect/references/dimension_registry.yaml \
-  --manual-overrides-dir .codex/skills/system-card-from-inspect/references/manual_overrides \
+python scripts/run_with_runtime.py run \
+  --input-dir path/to/logs_json_final \
+  --report-manifest references/report_manifest.example.yaml \
+  --benchmark-registry references/benchmark_registry.yaml \
+  --dimension-registry references/dimension_registry.yaml \
+  --manual-overrides-dir references/manual_overrides \
   --analysis-mode hybrid \
   --artifacts-dir system_card_artifacts
 ```
@@ -200,20 +202,20 @@ python .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py run \
 Incrementally add a newly evaluated benchmark into an existing artifact directory:
 
 ```bash
-python .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py update-system-card \
+python scripts/run_with_runtime.py update-system-card \
   --existing-artifacts-dir existing_system_card_artifacts \
   --input-path path/to/new_benchmark.eval \
-  --benchmark-registry .codex/skills/system-card-from-inspect/references/benchmark_registry.yaml \
-  --dimension-registry .codex/skills/system-card-from-inspect/references/dimension_registry.yaml \
+  --benchmark-registry references/benchmark_registry.yaml \
+  --dimension-registry references/dimension_registry.yaml \
   --analysis-mode auto
 ```
 
 Generate registration suggestions from an existing summary:
 
 ```bash
-python .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py suggest-registry \
+python scripts/run_with_runtime.py suggest-registry \
   --summary system_card_artifacts/summary.json \
-  --benchmark-registry .codex/skills/system-card-from-inspect/references/benchmark_registry.yaml \
+  --benchmark-registry references/benchmark_registry.yaml \
   --yaml-out system_card_artifacts/registry_suggestions.yaml \
   --json-out system_card_artifacts/registry_suggestions.json
 ```
@@ -223,7 +225,7 @@ python .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py sugges
 - `rule`
   Use only the built-in rule-based analyzers for benchmark, dimension, and top-level system-card synthesis.
 - `llm`
-  Require the GPT-5.4 analysis client for benchmark, dimension, and top-level synthesis. If credentials or endpoint configuration are missing, the pipeline falls back with warnings.
+  Attempt to use configured LLM analysis for benchmark, dimension, and top-level synthesis. The current implementation falls back to rule-based analysis with warnings if configuration is unavailable.
 - `hybrid`
   Start from rule-based facts, then let GPT-5.4 rewrite benchmark descriptions, benchmark findings, dimension synthesis, and top-level release synthesis.
 - `auto`

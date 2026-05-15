@@ -1,0 +1,5 @@
+jinja2
+openai
+pyarrow
+PyYAML
+inspect-ai

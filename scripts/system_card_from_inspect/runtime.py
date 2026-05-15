@@ -31,7 +31,7 @@ class ResolvedRuntime:
 
 
 def repo_root_from_skill_root(skill_root: str | Path) -> Path:
-    return Path(skill_root).resolve().parents[2]
+    return Path(skill_root).resolve()
 
 
 def resolve_repo_path(value: str | Path, repo_root: str | Path) -> Path:

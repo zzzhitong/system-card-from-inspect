@@ -1,75 +1,78 @@
 # system-card-from-inspect
 
-`system-card-from-inspect` 是一个把 Inspect eval 日志自动整理成 system card 文档产物的 skill。
+`system-card-from-inspect` 是一个把 Inspect eval 日志自动整理成 system card 产物的 Skill。
 
-它的目标不是直接生成 PDF，而是先把日志沉淀成一套**可追溯、可审阅、可增量更新**的 markdown 与结构化 facts，方便后续人工审阅、LaTeX 排版或正式发布。
+它的目标不是直接生成 PDF，而是先把日志沉淀成一套**可追溯、可审阅、可增量更新**的结构化 facts 与 markdown，方便后续人工审阅、LaTeX 排版或正式发布。
 
-## 这个 skill 能做什么
+## 功能概览
 
 - 读取 Inspect `.eval` 日志或导出的 `.json` 日志
-- 统一生成 benchmark / dimension / top-level 的结构化 facts
+- 生成 benchmark / dimension / top-level 的结构化 facts
 - 生成可审阅的 markdown 报告
 - 支持 benchmark、dimension、top-level 三层 GPT-5.4 分析增强
 - 支持中英文最终输出
 - 支持在已有 artifact 基础上增量加入新 benchmark
 - 支持对未正式注册的 benchmark 生成 registry suggestions
 
-## 当前不做什么
+## 当前边界
 
 - 不直接生成 LaTeX / PDF
 - 不做 Overleaf 同步
 - 不自动联网补 benchmark 说明
-- 还**不支持**“多个模型在相同 benchmark 上的自动对比分析”
+- 目前仍以**单模型 system card**为主，不支持多模型同 benchmark 的自动对比报告
 
-## 适用场景
+## 安装
 
-### 场景 1：单模型，多 benchmark，统一生成 system card
-
-先完成多个 benchmark 的评测，再把这些日志统一做成一套 system card artifacts。
-
-### 场景 2：已有 system card，新增一个 benchmark 后增量并入
-
-不必从头重跑旧 benchmark，可以只分析新 benchmark，再重建受影响维度和顶层 system card。
-
-## 目录结构
-
-这个 skill 的核心文件包括：
-
-- `SKILL.md`
-  - 面向 agent 的工作流说明和约束
-- `references/benchmark_registry.yaml`
-  - benchmark 注册表
-- `references/dimension_registry.yaml`
-  - 维度元信息
-- `references/benchmark_hints.yaml`
-  - benchmark 的语义提示、评估问题、部署背景
-- `references/runtime_config.json`
-  - 共享运行时配置
-- `references/runtime_config.local.example.json`
-  - 本机配置示例
-- `scripts/run_with_runtime.py`
-  - 跨平台 launcher，推荐入口
-- `scripts/run_pipeline.py`
-  - 主 CLI
-
-## 推荐调用方式
-
-推荐从**仓库根目录**执行命令，并优先使用跨平台 launcher：
+### 方式 1：作为独立仓库使用
 
 ```bash
-python .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py --print-runtime
+git clone https://github.com/zzzhitong/system-card-from-inspect.git
+cd system-card-from-inspect
 ```
 
-如果你的环境使用 `python3`：
+### 方式 2：作为 Codex Skill 安装
+
+把**整个仓库根目录**放到你的 Codex skills 目录中，并保持目录名为 `system-card-from-inspect`。安装后命令仍应从这个仓库根目录执行。
+
+## 依赖安装
+
+建议先创建虚拟环境，再安装依赖：
+
+### Linux / macOS
 
 ```bash
-python3 .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py --print-runtime
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### Windows PowerShell
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
+## 运行入口
+
+推荐使用跨平台 launcher：
+
+```bash
+python scripts/run_with_runtime.py --print-runtime
+```
+
+如果你的环境把 Python 暴露成 `python3`：
+
+```bash
+python3 scripts/run_with_runtime.py --print-runtime
 ```
 
 这条命令会打印：
 
 - 当前使用的 runtime config
 - 解析到的 Python 路径
+- Python 来源
 - 工作目录
 - `.env` 文件来源
 - 注入的环境变量 key
@@ -78,8 +81,8 @@ python3 .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py --pri
 
 launcher 会按顺序查找：
 
-1. `.codex/skills/system-card-from-inspect/references/runtime_config.local.json`
-2. `.codex/skills/system-card-from-inspect/references/runtime_config.json`
+1. `references/runtime_config.local.json`
+2. `references/runtime_config.json`
 
 默认配置支持这些字段：
 
@@ -123,15 +126,63 @@ launcher 会按顺序查找：
 - 本机差异配置写到 `runtime_config.local.json`
 - 密钥优先放 `.env`，不要直接写入共享配置
 
+## 环境变量
+
+如果要启用 GPT-5.4 分析增强，Skill 会优先读取：
+
+- 仓库根目录 `.env`
+- `inspect_evals/.env`
+
+你也可以参考 `.env.example`：
+
+```bash
+cp .env.example .env
+```
+
+主要环境变量：
+
+- `SYSTEM_CARD_ANALYSIS_PROVIDER`
+- `SYSTEM_CARD_ANALYSIS_MODEL`
+- `SYSTEM_CARD_ANALYSIS_API_KEY`
+- `SYSTEM_CARD_ANALYSIS_BASE_URL`
+- `SYSTEM_CARD_ANALYSIS_API_VERSION`
+- `SYSTEM_CARD_ANALYSIS_TEMPERATURE`
+- `SYSTEM_CARD_ANALYSIS_MAX_TOKENS`
+
+也支持 fallback 到：
+
+- `AZUREAI_OPENAI_API_KEY`
+- `AZUREAI_OPENAI_BASE_URL`
+- `AZUREAI_OPENAI_API_VERSION`
+- `OPENAI_API_KEY`
+- `OPENAI_BASE_URL`
+
+## 最小样例
+
+仓库包含一个最小可运行的示例日志：
+
+- `examples/minimal_inspect_log.json`
+
+你可以直接用它做 smoke test：
+
+```bash
+python scripts/run_with_runtime.py run \
+  --input-path examples/minimal_inspect_log.json \
+  --benchmark-registry references/benchmark_registry.yaml \
+  --dimension-registry references/dimension_registry.yaml \
+  --analysis-mode rule \
+  --artifacts-dir tmp_artifacts
+```
+
 ## 常用命令
 
 ### 1. 批量生成一套 system card
 
 ```bash
-python .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py run \
-  --input-dir inspect_evals/logs_json_final \
-  --benchmark-registry .codex/skills/system-card-from-inspect/references/benchmark_registry.yaml \
-  --dimension-registry .codex/skills/system-card-from-inspect/references/dimension_registry.yaml \
+python scripts/run_with_runtime.py run \
+  --input-dir path/to/logs_json_final \
+  --benchmark-registry references/benchmark_registry.yaml \
+  --dimension-registry references/dimension_registry.yaml \
   --analysis-mode auto \
   --artifacts-dir system_card_artifacts
 ```
@@ -139,10 +190,10 @@ python .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py run \
 ### 2. 从单个 `.eval` 生成
 
 ```bash
-python .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py run \
+python scripts/run_with_runtime.py run \
   --input-path path/to/benchmark.eval \
-  --benchmark-registry .codex/skills/system-card-from-inspect/references/benchmark_registry.yaml \
-  --dimension-registry .codex/skills/system-card-from-inspect/references/dimension_registry.yaml \
+  --benchmark-registry references/benchmark_registry.yaml \
+  --dimension-registry references/dimension_registry.yaml \
   --analysis-mode auto \
   --artifacts-dir system_card_artifacts
 ```
@@ -150,12 +201,12 @@ python .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py run \
 ### 3. 显式指定 manifest
 
 ```bash
-python .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py run \
-  --input-dir inspect_evals/logs_json_final \
-  --report-manifest .codex/skills/system-card-from-inspect/references/report_manifest.example.yaml \
-  --benchmark-registry .codex/skills/system-card-from-inspect/references/benchmark_registry.yaml \
-  --dimension-registry .codex/skills/system-card-from-inspect/references/dimension_registry.yaml \
-  --manual-overrides-dir .codex/skills/system-card-from-inspect/references/manual_overrides \
+python scripts/run_with_runtime.py run \
+  --input-dir path/to/logs_json_final \
+  --report-manifest references/report_manifest.example.yaml \
+  --benchmark-registry references/benchmark_registry.yaml \
+  --dimension-registry references/dimension_registry.yaml \
+  --manual-overrides-dir references/manual_overrides \
   --analysis-mode hybrid \
   --artifacts-dir system_card_artifacts
 ```
@@ -163,20 +214,20 @@ python .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py run \
 ### 4. 增量加入一个新 benchmark
 
 ```bash
-python .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py update-system-card \
+python scripts/run_with_runtime.py update-system-card \
   --existing-artifacts-dir existing_system_card_artifacts \
   --input-path path/to/new_benchmark.eval \
-  --benchmark-registry .codex/skills/system-card-from-inspect/references/benchmark_registry.yaml \
-  --dimension-registry .codex/skills/system-card-from-inspect/references/dimension_registry.yaml \
+  --benchmark-registry references/benchmark_registry.yaml \
+  --dimension-registry references/dimension_registry.yaml \
   --analysis-mode auto
 ```
 
 ### 5. 生成 registry suggestions
 
 ```bash
-python .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py suggest-registry \
+python scripts/run_with_runtime.py suggest-registry \
   --summary system_card_artifacts/summary.json \
-  --benchmark-registry .codex/skills/system-card-from-inspect/references/benchmark_registry.yaml \
+  --benchmark-registry references/benchmark_registry.yaml \
   --yaml-out system_card_artifacts/registry_suggestions.yaml \
   --json-out system_card_artifacts/registry_suggestions.json
 ```
@@ -186,7 +237,7 @@ python .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py sugges
 - `rule`
   - 只使用规则分析
 - `llm`
-  - 尽量让 GPT-5.4 生成 benchmark / dimension / top-level 分析
+  - 尝试使用配置好的 LLM 做 benchmark / dimension / top-level 分析；当前实现缺配置时会退回规则分析并写 warning
 - `hybrid`
   - 先做规则分析，再让 GPT-5.4 重写关键自然语言字段
 - `auto`
@@ -196,7 +247,7 @@ python .codex/skills/system-card-from-inspect/scripts/run_with_runtime.py sugges
 
 - 快速跑通：`auto`
 - 更稳的增强版：`hybrid`
-- 明确要求 LLM 分析：`llm`
+- 明确想尽量使用 LLM：`llm`
 
 ## 输出产物
 
@@ -245,6 +296,33 @@ artifacts/
 - `build_report.json`
   - 本次构建模式、warnings、主要产物路径
 
+## 注册表与维度说明
+
+### benchmark registry
+
+`references/benchmark_registry.yaml` 用于注册：
+
+- benchmark 身份
+- 主指标
+- 默认维度
+- 样本选择策略
+
+### dimension registry
+
+`references/dimension_registry.yaml` 主要存放：
+
+- 维度标题
+- 顺序
+- 默认描述
+
+它**不是** benchmark 成员列表的唯一来源。当前 pipeline 会优先按 benchmark 自带的 `dimension_id` 自动入桶。
+
+需要注意的是：
+
+- `benchmark_registry.yaml` 中可能已经有大量自动生成条目
+- 这些条目引用的 dimension 不一定都已经在 `dimension_registry.yaml` 中精修完成
+- 当维度元信息缺失时，pipeline 会保留 warning，或自动生成临时维度 bucket
+
 ## 当前限制
 
 ### 1. 这是单模型 system card 流程
@@ -271,7 +349,7 @@ artifacts/
 
 ### 3. 终点是 markdown，不是 PDF
 
-当前 skill 的边界是：
+当前 Skill 的边界是：
 
 - 生成结构化 facts
 - 生成中英文 markdown
@@ -280,5 +358,5 @@ LaTeX、PDF、Overleaf 应该在后续发布阶段再处理。
 
 ## 更多说明
 
-- 若你是人类使用者，优先看本 README。
-- 若你在调试 agent 行为或想看更细的约束，阅读 [SKILL.md](./SKILL.md)。
+- 若你是人类使用者，优先看本 README
+- 若你在调试 agent 行为或想看更细的约束，阅读 [SKILL.md](./SKILL.md)

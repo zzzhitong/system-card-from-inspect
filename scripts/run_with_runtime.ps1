@@ -10,7 +10,7 @@ $ErrorActionPreference = "Stop"
 
 function Get-RepoRoot {
     param([string]$SkillRoot)
-    return [System.IO.Path]::GetFullPath((Join-Path $SkillRoot "..\..\.."))
+    return [System.IO.Path]::GetFullPath($SkillRoot)
 }
 
 function Resolve-FromRepo {

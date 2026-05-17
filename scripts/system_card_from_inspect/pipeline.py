@@ -1887,23 +1887,9 @@ def translate_system_card_payload_for_language(
             "title": payload.get("report", {}).get("title"),
             "notes": payload.get("report", {}).get("notes"),
         },
-        "benchmark_rows": [
-            {
-                "display_name": row.get("display_name"),
-                "dimension_title": row.get("dimension_title"),
-                "primary_metric_summary": row.get("primary_metric_summary"),
-            }
-            for row in payload.get("benchmark_rows", [])
-        ],
         "key_findings": payload.get("key_findings", []),
         "coverage_and_caveats": payload.get("coverage_and_caveats", []),
-        "overall_risk_profile": {
-            "label_highest_risk_benchmark": "Highest-risk benchmark",
-            "label_highest_aggregate_mean": "Highest aggregate mean",
-            "label_dimension_count": "Dimension count",
-        },
         "recommended_mitigations": payload.get("recommended_mitigations", []),
-        "warnings": payload.get("warnings", []),
     }
     try:
         translated_fields = call_translation_llm(llm_config, "system_card", translation_payload, target_language)
@@ -1924,18 +1910,6 @@ def translate_system_card_payload_for_language(
     translated["key_findings"] = translated_fields.get("key_findings", payload.get("key_findings", []))
     translated["coverage_and_caveats"] = translated_fields.get("coverage_and_caveats", payload.get("coverage_and_caveats", []))
     translated["recommended_mitigations"] = translated_fields.get("recommended_mitigations", payload.get("recommended_mitigations", []))
-    translated["warnings"] = translated_fields.get("warnings", payload.get("warnings", []))
-    benchmark_rows = []
-    translated_rows = translated_fields.get("benchmark_rows", [])
-    for original, translated_row in zip(payload.get("benchmark_rows", []), translated_rows):
-        benchmark_rows.append(
-            {
-                **original,
-                "dimension_title": translated_row.get("dimension_title", original.get("dimension_title")),
-                "primary_metric_summary": translated_row.get("primary_metric_summary", original.get("primary_metric_summary")),
-            }
-        )
-    translated["benchmark_rows"] = benchmark_rows or payload.get("benchmark_rows", [])
     return translated
 
 

@@ -28,43 +28,43 @@
 {% endif %}
 
 {% if key_findings %}
-## Key findings
+## {{ "关键发现" if zh else "Key findings" }}
 {% for finding in key_findings %}
 - {{ finding }}
 {% endfor %}
 {% endif %}
 
 {% if coverage_and_caveats %}
-## Coverage and caveats
+## {{ "覆盖情况与注意事项" if zh else "Coverage and caveats" }}
 {% for caveat in coverage_and_caveats %}
 - {{ caveat }}
 {% endfor %}
 {% endif %}
 
 {% if overall_risk_profile %}
-## Overall risk profile
-- Highest-risk benchmark: {{ overall_risk_profile.highest_risk_benchmark or "n/a" }}
-- Highest aggregate mean: {{ overall_risk_profile.highest_risk_mean_formatted }}
-- Dimension count: {{ overall_risk_profile.dimension_count }}
+## {{ "总体风险画像" if zh else "Overall risk profile" }}
+- {{ "最高风险 benchmark" if zh else "Highest-risk benchmark" }}: {{ overall_risk_profile.highest_risk_benchmark or "n/a" }}
+- {{ "最高聚合均值" if zh else "Highest aggregate mean" }}: {{ overall_risk_profile.highest_risk_mean_formatted }}
+- {{ "维度数量" if zh else "Dimension count" }}: {{ overall_risk_profile.dimension_count }}
 {% endif %}
 
 {% if recommended_mitigations %}
-## Recommended mitigations
+## {{ "建议的缓解措施" if zh else "Recommended mitigations" }}
 {% for item in recommended_mitigations %}
 - {{ item }}
 {% endfor %}
 {% endif %}
 
-## Evaluation summary
+## {{ "评测摘要" if zh else "Evaluation summary" }}
 
-| Benchmark | Dimension | Primary metrics |
+| {{ "Benchmark" if zh else "Benchmark" }} | {{ "维度" if zh else "Dimension" }} | {{ "主指标" if zh else "Primary metrics" }} |
 |---|---|---|
 {% for benchmark in benchmark_rows %}
 | {{ benchmark.display_name }} | {{ benchmark.dimension_title }} | {{ benchmark.primary_metric_summary }} |
 {% endfor %}
 
 {% if warnings %}
-## Warnings
+## {{ "警告" if zh else "Warnings" }}
 {% for warning in warnings %}
 - {{ warning }}
 {% endfor %}
